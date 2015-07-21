@@ -10,22 +10,14 @@
 		<div class="container">
 			<?php include('../view/nav.php'); ?>
 			
-			
+			<h2>Add a new parameter</h2>
 
-			<a href="viewAddGroupProduct.php"><button class="btn btn-success">Add a group</button></a>
-			<h2>List of Group Products</h2>	
-			<table class="table table-stripped">
-			<tr><th>Name</th><th>Type</th><th>Modify</th></tr>
 			<?php
-				foreach($groups as $group){
-					echo('<tr>');
-					echo('<td>'.$group->getName().'</td>');
-					echo('<td>'.$group->getType().'</td>');
-					echo('<td><a href="../controller/viewGroupProduct.php?id='.$group->getId().'"><button><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a></td>');
-					echo('</tr>');
-				}
+				echo('<form method="get" action="addParameter.php">');
+				$parameter->printToModify("viewParameters.php");
+				echo('<button class="btn btn-success" type="submit">Add Parameter</button>
+				</form>');
 			?>
-			</table>
 		</div>
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>

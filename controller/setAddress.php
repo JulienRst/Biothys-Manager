@@ -4,7 +4,7 @@
 	$address = new address($_GET["id"]);
 
 	foreach($_GET as $key => $value){
-		if($key != "next"){
+		if($key != "next" && $key != "class" && $key != "step"){
 			$nkey = "set".ucfirst($key);
 			$address->$nkey($value);
 		}

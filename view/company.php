@@ -9,24 +9,21 @@
 	<body> 
 		<div class="container">
 			<?php include('../view/nav.php'); ?>
-			
-			
-
-			<a href="viewAddGroupProduct.php"><button class="btn btn-success">Add a group</button></a>
-			<h2>List of Group Products</h2>	
-			<table class="table table-stripped">
-			<tr><th>Name</th><th>Type</th><th>Modify</th></tr>
 			<?php
-				foreach($groups as $group){
-					echo('<tr>');
-					echo('<td>'.$group->getName().'</td>');
-					echo('<td>'.$group->getType().'</td>');
-					echo('<td><a href="../controller/viewGroupProduct.php?id='.$group->getId().'"><button><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a></td>');
-					echo('</tr>');
+				if(isset($error)){
+					echo('Rien à afficher');
+				} else {
+					echo('<h2>You\'re going to modify : '.$company->getName().'</h2>');
+					echo('<form method="get" action="setClass.php">');
+					$company->printToAdd('viewCompanies.php');
+					echo('<button class="btn btn-primary" type="submit">Modify</button>
+					</form>');
+					echo('<h2>Deleting a company is irreversible</h2>');
+					echo('<a href="eraseClass.php?id='.$company->getId().'&class=company&next=viewCompanies.php"><button class="btn btn-danger">Delete</button></a>');
 				}
 			?>
-			</table>
 		</div>
+		<?php include('display.php'); ?>
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.js"></script>

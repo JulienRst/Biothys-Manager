@@ -11,8 +11,7 @@
 
 		public function __construct($id = 0){
 
-			$database = new database();
-			$this->pdo = $database->getPdo();
+			$this->pdo = database::getInstance();
 
 			if($id != 0){
 				$this->id = $id;
@@ -21,7 +20,7 @@
 		}
 
 		public function getFromDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM right_group WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM right_group WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 
 			try {
@@ -42,7 +41,7 @@
 		}
 
 		public function addToDatabase(){
-			$stmt = $this->pdo->prepare("INSERT INTO right_group(name) VALUES(:name)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO right_group(name) VALUES(:name)");
 			$stmt->bindParam(':name',$this->name);
 			try {
 				$stmt->execute();
@@ -52,7 +51,7 @@
 		}
 
 		public function setToDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM right_group WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM right_group WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 			try {
 				$stmt_get->execute();
@@ -76,7 +75,7 @@
 			}
 		}
 		public function eraseOfDatabase(){
-			$stmt = $this->pdo->prepare('DELETE FROM right_group WHERE id = :id');
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM right_group WHERE id = :id');
 			$stmt->bindParam(':id',$this->id);
 
 			try {

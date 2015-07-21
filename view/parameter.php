@@ -13,13 +13,13 @@
 				if(isset($error)){
 					echo('Rien à afficher');
 				} else {
-					echo('<h2>You\'re going to modify : '.$perfume->getName().'</h2>');
-					echo('<form method="get" action="setPerfume.php">');
-					$perfume->printToModify('viewPerfumes.php');
+					echo('<h2>You\'re going to modify : '.$parameter->getName().'</h2>');
+					echo('<form method="get" action="setParameter.php">');
+					$parameter->printToModify('viewParameters.php');
 					echo('<button class="btn btn-primary" type="submit">Modify</button>
 					</form>');
 					echo('<h2>Deleting a product is irreversible</h2>');
-					echo('<a href="erasePerfume.php?id='.$perfume->getId().'""><button class="btn btn-danger">Delete</button></a>');
+					echo('<a href="eraseParameter.php?id='.$parameter->getId().'""><button class="btn btn-danger">Delete</button></a>');
 				}
 			?>
 		</div>

@@ -18,8 +18,7 @@
 
 		public function __construct($id = 0){
 
-			$database = new database();
-			$this->pdo = $database->getPdo();
+			$this->pdo = database::getInstance();
 
 			$this->id = $id;
 			$this->name = '';
@@ -34,7 +33,7 @@
 		}
 
 		public function getFromDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM product WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM product WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 
 			try {
@@ -55,7 +54,7 @@
 		}
 
 		public function addToDatabase(){
-			$stmt = $this->pdo->prepare("INSERT INTO product(ref,id_group,name,description,unit,cost,price) VALUES(:ref,:id_group,:name,:description,:unit,:cost,:price)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO product(ref,id_group,name,description,unit,cost,price) VALUES(:ref,:id_group,:name,:description,:unit,:cost,:price)");
 			$stmt->bindParam(':ref',$this->ref);
 			$stmt->bindParam(':id_group',$this->id_group);
 			$stmt->bindParam(':name',$this->name);
@@ -72,7 +71,7 @@
 		}
 
 		public function setToDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM product WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM product WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 			try {
 				$stmt_get->execute();
@@ -83,7 +82,7 @@
 
 			foreach($actual_product as $key => $value){
 				if($actual_product[$key] != $this->$key){
-					$stmt = $this->pdo->prepare("UPDATE product SET $key = :value WHERE id= :id");
+					$stmt = $this->pdo->PDOInstance->prepare("UPDATE product SET $key = :value WHERE id= :id");
 					$stmt->bindParam(':value',$this->$key);
 					$stmt->bindParam(':id',$this->id);
 					try {
@@ -97,7 +96,7 @@
 		}
 
 		public function eraseOfDatabase(){
-			$stmt = $this->pdo->prepare('DELETE FROM product WHERE id = :id');
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM product WHERE id = :id');
 			$stmt->bindParam(':id',$this->id);
 
 			try {
@@ -153,11 +152,11 @@
 				</div>
 				<div class="form-group">
 					<label for="description">Cost</label>
-					<input name="cost" type="number" class="form-control" value="'.$this->cost.'">
+					<input name="cost" type="text" class="form-control" value="'.$this->cost.'">
 				</div>
 				<div class="form-group">
 					<label for="description">Price</label>
-					<input name="price" type="number" class="form-control" value="'.$this->price.'">
+					<input name="price" type="text" class="form-control" value="'.$this->price.'">
 				</div>
 				');
 		}

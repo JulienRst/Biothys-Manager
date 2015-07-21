@@ -9,13 +9,15 @@
 	<body> 
 		<div class="container">
 			<?php include('../view/nav.php'); ?>
-			<h2>List of perfumes</h2>
-			<a href="viewAddPerfume.php"><button class="btn btn-success">Add Perfumes</button></a>
+			<h2>Customers</h2>
+			<a href="viewAddCustomer.php"><button class="btn btn-success">Add Customers</button></a>
 			<?php 
 				echo('<table class="table table-stripped">');
-				echo('<tr><th>Ref</th><th>Name</th><th>Modifier</th>');
-				foreach($perfumes as $perfume){
-					$perfume->printTR();
+			?>
+				<tr><th>Name</th><th>Company</th><th>Nationality</th><th>Mail</th><th>Phone number</th><th>Modify</th></tr>
+			<?php
+				foreach($customers as $customer){
+					$customer->printTR();
 				}
 				echo('</table>');
 			?>

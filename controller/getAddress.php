@@ -1,16 +1,24 @@
 <?php
 
-	require_once('../model/address.php');
-	require_once('../model/employee.php');
+	$data = $_GET["address"];
+	$data = json_decode($data,true);
 
-	$idAddress = $_GET["idAddress"];
-	$idEmployee = $_GET["idEmployee"];
+
+	$idAddress = $data['id'];
+	$idEmployee = $data['idFor'];
+	$class = $data['for'];
+	$step = $data['step'];
+
+	require_once('../model/address.php');
+	require_once('../model/'.$class.'.php');
 
 	$address = new address($idAddress);
-	$employee = new employee($idEmployee);
+	$item = new $class($idEmployee);
 
-	$employee->setId_address($idAddress);
-	$employee->setToDatabase();
+	$method = "setId_".$step;
+
+	$item->$method($idAddress);
+	$item->setToDatabase();
 
 	$result = array('idAddress' => $idAddress,'address' => $address->printAddress());
 

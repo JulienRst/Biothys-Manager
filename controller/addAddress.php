@@ -1,18 +1,31 @@
 <?php
+	$data = $_GET["address"];
+	$data = json_decode($data,true);
+
+
+	$idFor = $data['idFor'];
+	$class = $data['for'];
+	$step = $data['step'];
+
 	require_once('../model/address.php');
-	require_once('../model/employee.php');
+	require_once('../model/'.$class.'.php');
+
 	$address = new address();
 
 	foreach($_GET as $key => $value){
-		if($key != "next" && $key != "idem"){
+		if($key != "next" && $key != "address"){
 			$nkey = "set".ucfirst($key);
 			$address->$nkey($value);
 		}
 	}
 	$address->addToDatabase();
-	$employee = new employee($_GET["idem"]);
-	$employee->setId_address($address->getId());
-	$employee->setToDatabase();
-	echo(json_encode(array('id' => $address->getId(),'address' => $address->printAddress())));
+
+	$item = new $class($idFor);
+	$method = "setId_".$step;
+	$item->$method($address->getId());
+	$item->setToDatabase();
+
+	$result = array('idAddress' => $address->getId(),'address' => $address->printAddress());
+	echo(json_encode($result));
 
 ?>

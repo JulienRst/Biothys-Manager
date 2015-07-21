@@ -21,8 +21,7 @@
 
 		public function __construct($id = 0){
 
-			$database = new database();
-			$this->pdo = $database->getPdo();
+			$this->pdo = database::getInstance();
 
 			if($id != 0){
 				$this->id = $id;
@@ -31,7 +30,7 @@
 		}
 
 		public function getFromDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM order WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM `order` WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 
 			try {
@@ -52,7 +51,7 @@
 		}
 
 		public function addToDatabase(){
-			$stmt = $this->pdo->prepare("INSERT INTO order(id_company,id_employee,id_delivery_address,biling_period_bis,date_issuing,date_received,date_entry,date_shipment,date_receipt,date_billing) VALUES(:id_company,:id_employee,:id_delivery_address,:biling_period_bis,:date_issuing,:date_received,:date_entry,:date_shipment,:date_receipt,:date_billing)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(id_company,id_employee,id_delivery_address,biling_period_bis,date_issuing,date_received,date_entry,date_shipment,date_receipt,date_billing) VALUES(:id_company,:id_employee,:id_delivery_address,:biling_period_bis,:date_issuing,:date_received,:date_entry,:date_shipment,:date_receipt,:date_billing)");
 			$stmt->bindParam(':id_company',$this->id_company);
 			$stmt->bindParam(':id_employee',$this->id_employee);
 			$stmt->bindParam(':id_delivery_address',$this->id_delivery_address);
@@ -71,7 +70,7 @@
 		}
 
 		public function setToDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM order WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM `order` WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 			try {
 				$stmt_get->execute();
@@ -82,7 +81,7 @@
 
 			foreach($actual_order as $key => $value){
 				if($actual_order[$key] != $this->$key){
-					$stmt = $this->pdo->prepare("UPDATE order SET $key = :value WHERE id = :id");
+					$stmt = $this->pdo->PDOInstance->prepare("UPDATE `order` SET $key = :value WHERE id = :id");
 					$stmt->bindParam(":value",$this->$key);
 					$stmt->bindParam(":id",$this->id);
 					try {
@@ -95,7 +94,7 @@
 			}
 		}
 		public function eraseOfDatabase(){
-			$stmt = $this->pdo->prepare('DELETE FROM order WHERE id = :id');
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM `order` WHERE id = :id');
 			$stmt->bindParam(':id',$this->id);
 
 			try {

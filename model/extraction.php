@@ -9,16 +9,15 @@
 		private $pdo;
 
 		public function __construct(){
-			$database = new database();
-			$this->pdo = $database->getPdo();
+			$this->pdo = database::getInstance();
 		}
 
 		public function getProductByGroup($id = NULL){
 			if($id){
-				$stmt = $this->pdo->prepare("SELECT * FROM product as p WHERE p.group_id = :id");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM product as p WHERE p.id_group = :id");
 				$stmt->bindParam(':id',$id);
 			} else {
-				$stmt = $this->pdo->prepare("SELECT * FROM product as p");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM product as p");
 			}
 
 			try {
@@ -61,10 +60,10 @@
 
 		public function getGroup($id = NULL){
 			if($id){
-				$stmt = $this->pdo->prepare("SELECT * FROM group_product WHERE id= :id");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM group_product WHERE id= :id");
 				$stmt->bindParam(':id',$id);
 			} else {
-				$stmt = $this->pdo->prepare("SELECT * FROM group_product");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM group_product");
 			}
 
 			try {
@@ -81,6 +80,7 @@
 				$group_ = new group_products();
 				$group_->setId($group["id"]);
 				$group_->setName($group["name"]);
+				$group_->setType($group["type"]);
 				array_push($result,$group_);
 			}
 
@@ -89,10 +89,10 @@
 
 		public function getEmployee($id = NULL){
 			if($id){
-				$stmt = $this->pdo->prepare("SELECT * FROM employee WHERE id= :id");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM employee WHERE id= :id");
 				$stmt->bindParam(':id',$id);
 			} else {
-				$stmt = $this->pdo->prepare("SELECT * FROM employee");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM employee");
 			}
 
 			try {
@@ -119,10 +119,10 @@
 
 		public function getRight_group($id = NULL){
 			if($id){
-				$stmt = $this->pdo->prepare("SELECT * FROM right_group WHERE id= :id");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM right_group WHERE id= :id");
 				$stmt->bindParam(':id',$id);
 			} else {
-				$stmt = $this->pdo->prepare("SELECT * FROM right_group");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM right_group");
 			}
 			try {
 				$stmt->execute();
@@ -149,7 +149,7 @@
 		public function searchForAddress($string){
 			if($string != ""){
 				$string = "%".$string."%";
-				$stmt = $this->pdo->prepare("SELECT * FROM address WHERE country LIKE :country or zip LIKE :zip or line LIKE :line or city LIKE :city");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM address WHERE country LIKE :country or zip LIKE :zip or line LIKE :line or city LIKE :city");
 
 				$stmt->bindParam(':country',$string);
 				$stmt->bindParam(':zip',$string);
@@ -181,10 +181,10 @@
 
 		public function getPerfumes($id = NULL){
 			if($id){
-				$stmt = $this->pdo->prepare("SELECT * FROM perfume WHERE id= :id ORDER BY ref");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM perfume WHERE id= :id ORDER BY ref");
 				$stmt->bindParam(':id',$id);
 			} else {
-				$stmt = $this->pdo->prepare("SELECT * FROM perfume ORDER BY ref");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM perfume ORDER BY ref");
 			}
 			try {
 				$stmt->execute();
@@ -203,6 +203,148 @@
 					$perfume_->$attribute($value);
 				}
 				array_push($result,$perfume_);
+			}
+
+			return $result;
+		}
+
+		public function getCustomers($id = NULL){
+			if($id){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM customer WHERE id= :id");
+				$stmt->bindParam(':id',$id);
+			} else {
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM customer");
+			}
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+			foreach ($stmt as $customer) {
+				$customer_ = new customer();
+				foreach($customer as $key => $value){
+					$attribute = "set".ucfirst($key);
+					$customer_->$attribute($value);
+				}
+				array_push($result,$customer_);
+			}
+
+			return $result;
+		}
+
+		public function getCompany($id = NULL){
+			if($id){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM company WHERE id= :id");
+				$stmt->bindParam(':id',$id);
+			} else {
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM company");
+			}
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+			foreach($stmt as $company){
+				$ncompany = NULL;
+				$ncompany = new company($company["id"]);
+				echo('<br/><br/>');
+				array_push($result, $ncompany);
+			}
+
+			return $result;
+		}
+
+
+		public function get($class,$id = NULL){
+			if($id){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM $class WHERE id= :id");
+				$stmt->bindParam(':id',$id);
+			} else {
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM $class");
+			}
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+			foreach ($stmt as $entity) {
+				$entity_ = new $class();
+				foreach($entity as $key => $value){
+					$attribute = "set".ucfirst($key);
+					$entity_->$attribute($value);
+				}
+				array_push($result,$entity_);
+			}
+
+			return $result;
+		}
+
+		public function getCustomersFromCompany($idCompany){
+			if($idCompany){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT name,mail,phone_number FROM customer as c WHERE c.id_company = :id");
+				$stmt->bindParam(':id',$idCompany);
+				try {
+					$stmt->execute();
+				} catch(Exception $e){
+					echo("Problem at ".$e->getLine()." from model Extraction | GET CUSTOMERS FROM COMPANY :".$e->getMessage());
+				}
+
+				$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+				$result = array();
+
+				foreach ($stmt as $customer) {
+					$customer_ = new customer();
+					foreach($customer as $key => $value){
+						$attribute = "set".ucfirst($key);
+						$customer_->$attribute($value);
+					}
+					array_push($result,$customer_);
+				}
+
+				return $result;
+			}
+		}
+
+		public function getOrders($id = NULL){
+			if($id){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id= :id");
+				$stmt->bindParam(':id',$id);
+			} else {
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` as o");
+			}
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			
+
+			$result = array();
+
+
+
+			foreach($stmt as $order){
+				$norder = NULL;
+				$norder = new order($order["id"]);
+				array_push($result, $norder);
 			}
 
 			return $result;

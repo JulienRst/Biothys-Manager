@@ -16,8 +16,7 @@
 
 		public function __construct($id = 0){
 
-			$database = new database();
-			$this->pdo = $database->getPdo();
+			$this->pdo = database::getInstance();
 
 			if($id != 0){
 				$this->id = $id;
@@ -26,7 +25,7 @@
 		}
 
 		public function getFromDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM address WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM address WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 
 			try {
@@ -47,7 +46,7 @@
 		}
 
 		public function addToDatabase(){
-			$stmt = $this->pdo->prepare("INSERT INTO address(country,state,zip,city,line,complement) VALUES(:country,:state,:zip,:city,:line,:complement)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO address(country,state,zip,city,line,complement) VALUES(:country,:state,:zip,:city,:line,:complement)");
 			$stmt->bindParam(':country',$this->country);
 			$stmt->bindParam(':state',$this->state);
 			$stmt->bindParam(':zip',$this->zip);
@@ -63,7 +62,7 @@
 		}
 
 		public function setToDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM address WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM address WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 			try {
 				$stmt_get->execute();
@@ -88,11 +87,16 @@
 		}
 
 		public function printAddress(){
-			return($this->line.'<br>'.$this->complement.'<br>'.$this->zip.' '.$this->city.'<br>'.$this->state.' '.$this->country);
+			$address = $this->line.'<br/>';
+			if($this->complement != "" && $this->complement != NULL){
+				$address .= $this->complement."<br>";
+			}
+			$address .= $this->zip.' '.$this->city.'<br>'.$this->state.' '.$this->country;
+			return $address;
 		}
 
 		public function eraseOfDatabase(){
-			$stmt = $this->pdo->prepare('DELETE FROM address WHERE id = :id');
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM address WHERE id = :id');
 			$stmt->bindParam(':id',$this->id);
 
 			try {

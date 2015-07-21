@@ -24,9 +24,7 @@
 		private $pdo;
 
 		public function __construct($id = 0){
-
-			$database = new database();
-			$this->pdo = $database->getPdo();
+			$this->pdo = database::getInstance();
 			$this->id_address = -1;
 			if($id != 0){
 				$this->id = $id;
@@ -39,7 +37,7 @@
 		}
 
 		public function getFromDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM employee WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM employee WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 
 			try {
@@ -69,9 +67,10 @@
 
 			$this->birthdate = strtotime($this->birthdate);
 
-			$stmt = $this->pdo->prepare("INSERT INTO employee(name,surname,short_phone,phone_number,id_address,birthdate,right_group,login,password) VALUES(:name,:surname,:short_phone,:phone_number,:id_address,:birthdate,:right_group,:login,:password)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO employee(name,surname,mail,short_phone,phone_number,id_address,birthdate,right_group,login,password) VALUES(:name,:surname,:mail,:short_phone,:phone_number,:id_address,:birthdate,:right_group,:login,:password)");
 			$stmt->bindParam(':name',$this->name);
 			$stmt->bindParam(':surname',$this->surname);
+			$stmt->bindParam(':mail',$this->mail);
 			$stmt->bindParam(':short_phone',$this->short_phone);
 			$stmt->bindParam(':phone_number',$this->phone_number);
 			$stmt->bindParam(':id_address',$this->id_address);
@@ -87,7 +86,7 @@
 		}
 
 		public function setToDatabase(){
-			$stmt_get = $this->pdo->prepare("SELECT * FROM employee WHERE id = :id");
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM employee WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
 			try {
 				$stmt_get->execute();
@@ -98,7 +97,7 @@
 
 			foreach($actual_employee as $key => $value){
 				if($actual_employee[$key] != $this->$key && $this->$key != ""){
-					$stmt = $this->pdo->prepare("UPDATE employee SET $key = :value WHERE id = :id");
+					$stmt = $this->pdo->PDOInstance->prepare("UPDATE employee SET $key = :value WHERE id = :id");
 					$stmt->bindParam(":value",$this->$key);
 					$stmt->bindParam(":id",$this->id);
 					try {
@@ -111,7 +110,7 @@
 			}
 		}
 		public function eraseOfDatabase(){
-			$stmt = $this->pdo->prepare('DELETE FROM employee WHERE id = :id');
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM employee WHERE id = :id');
 			$stmt->bindParam(':id',$this->id);
 
 			try {
@@ -126,7 +125,7 @@
 		}
 
 		public function checkPassword($login,$password){
-			$stmt = $this->pdo->prepare("SELECT id,password FROM employee WHERE login = :login");
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id,password FROM employee WHERE login = :login");
 			$stmt->bindParam(':login',$login);
 
 			try {
@@ -198,9 +197,9 @@
 					<label for="address">Address (add or set the address with the button bellow not the textarea)</label>
 					<input type="text" id="address" class="form-control" value="'.str_replace('<br/>',' ',$this->address->printAddress()).'">
 					<input name="id_address" type="hidden" class="form-control" value="'.$this->id_address.'">
-					<button id="addAddress" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-plus\' aria-hidden=\'true\'></span></button></a>
-					<button id="setAddress" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a>
-					<button id="getAddress" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-search\' aria-hidden=\'true\'></span></button></a>
+					<button id="addAddress" alt="employee" step="address" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-plus\' aria-hidden=\'true\'></span></button></a>
+					<button id="setAddress" alt="employee" step="address" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a>
+					<button id="getAddress" alt="employee" step="address" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-search\' aria-hidden=\'true\'></span></button></a>
 				</div>
 				<div class="form-group">
 					<label for="right_group">Right Group</label>

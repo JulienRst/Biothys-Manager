@@ -9,23 +9,15 @@
 	<body> 
 		<div class="container">
 			<?php include('../view/nav.php'); ?>
-			
-			
-
-			<a href="viewAddGroupProduct.php"><button class="btn btn-success">Add a group</button></a>
-			<h2>List of Group Products</h2>	
-			<table class="table table-stripped">
-			<tr><th>Name</th><th>Type</th><th>Modify</th></tr>
-			<?php
-				foreach($groups as $group){
-					echo('<tr>');
-					echo('<td>'.$group->getName().'</td>');
-					echo('<td>'.$group->getType().'</td>');
-					echo('<td><a href="../controller/viewGroupProduct.php?id='.$group->getId().'"><button><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a></td>');
-					echo('</tr>');
+			<a href="viewAddCompany.php"><button class="btn btn-success">Add a Company</button></a>
+			<?php 
+				echo('<table class="table table-stripped">');
+				echo('<tr><th>Name</th><th>Group Company</th><th>Description</th><th>Contact</th><th>Address</th><th>Phone number</th><th>Modify</th></tr>');
+				foreach($companies as $company){
+					$company->printTR();
 				}
+				echo('</table>');
 			?>
-			</table>
 		</div>
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>

@@ -1,6 +1,8 @@
 <?php
 	require_once('../model/address.php');
-	$address = new address($_GET["id"]);
+	$data = $_GET["address"];
+	$data = json_decode($data,true);
+	$address = new address($data["id"]);
 ?>
 
 <h2>Set this Address to Database</h2>
@@ -21,7 +23,9 @@
 		<label for="city">City</label>
 		<input type="text" class="form-control" name="city" value="<?php echo($address->getCity()); ?>"/>
 	</div>
-	<input type="hidden" name="id" value="<?php echo($_GET['id']); ?>" />
+	<input type="hidden" name="id" value="<?php echo($data['id']); ?>" />
+	<input type="hidden" name="class" value="<?php echo($data['for']); ?>" />
+	<input type="hidden" name="step" value="<?php echo($data['step']); ?>" />
 	<div class="form-group">
 		<label for="line">Line</label>
 		<input type="text" class="form-control" name="line" value="<?php echo($address->getLine()); ?>"/>

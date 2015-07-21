@@ -10,23 +10,24 @@
 		<div class="container">
 			<?php include('../view/nav.php'); ?>
 			
-			
+			<h2>Modify Customer : <?php echo($customer->getName());?></h2>
+			<form method="get" action="setClass.php">
+				<input type="hidden" name="class" value="customer">
+				<?php
 
-			<a href="viewAddGroupProduct.php"><button class="btn btn-success">Add a group</button></a>
-			<h2>List of Group Products</h2>	
-			<table class="table table-stripped">
-			<tr><th>Name</th><th>Type</th><th>Modify</th></tr>
+					$customer->printToModify("viewCustomers.php");
+
+				?>
+				<button type="submit" class="btn btn-success">Set the customer</button>
+			</form>
+			<h2>Delete Customer (irreversible)</h2>
 			<?php
-				foreach($groups as $group){
-					echo('<tr>');
-					echo('<td>'.$group->getName().'</td>');
-					echo('<td>'.$group->getType().'</td>');
-					echo('<td><a href="../controller/viewGroupProduct.php?id='.$group->getId().'"><button><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a></td>');
-					echo('</tr>');
-				}
+
+				echo('<a href="deleteClass.php?class=customer&id='.$customer->getId().'"><button class="btn btn-danger">Delete the customer</button></a>');
+
 			?>
-			</table>
 		</div>
+			<?php include('../view/display.php'); ?>
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.js"></script>

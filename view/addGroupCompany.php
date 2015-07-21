@@ -10,12 +10,12 @@
 		<div class="container">
 			<?php include('../view/nav.php'); ?>
 			
-			<h2>Add a new perfume</h2>
+			<h2>Add a new group company</h2>
 
 			<?php
-				echo('<form method="get" action="addPerfume.php">');
-				$perfume->printToModify("viewPerfumes.php");
-				echo('<button class="btn btn-success" type="submit">Add Perfume</button>
+				echo('<form method="get" action="addClass.php">');
+				$gc->printToModify("viewGroupCompanies.php");
+				echo('<button class="btn btn-success" type="submit">Add Group Company</button>
 				</form>');
 			?>
 		</div>
