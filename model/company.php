@@ -123,7 +123,7 @@
 		}
 
 		public function printText(){
-			echo($this->name.'<br>'.$this->description);
+			return $this->name;
 		}
 
 		public function printTR(){

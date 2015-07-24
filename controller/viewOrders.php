@@ -5,9 +5,7 @@
 
 	$extraction = new extraction();
 
-	$results = $extraction->getOrders();
-
-	var_dump($results);
+	$orders = $extraction->getOrders();
 
 	include_once('../view/orders.php');
 ?>

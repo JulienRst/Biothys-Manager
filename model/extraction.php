@@ -321,6 +321,32 @@
 			}
 		}
 
+		public function searchFor($class,$needle){
+			if($class == "employee"){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE name LIKE '%".$needle."%' OR surname LIKE '%".$needle."%' LIMIT 5");
+			} else {
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE name LIKE '%".$needle."%' LIMIT 5");
+			}
+			
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+
+			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			$results = array();
+			foreach ($stmt as $item) {
+				$nitem = new $class($item["id"]);
+				array_push($results,$nitem);
+			}
+
+			return $results;
+
+		}
+
 		public function getOrders($id = NULL){
 			if($id){
 				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id= :id");

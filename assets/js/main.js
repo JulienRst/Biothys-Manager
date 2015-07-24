@@ -1,4 +1,11 @@
 $(document).ready(function(){
+
+	$('.datepicker').datepicker({
+		defaultDate : null
+	});
+
+
+
 	$('.display').click(function(e){
 		$('.overall').fadeIn();
 		e.preventDefault();
@@ -118,7 +125,6 @@ $(document).ready(function(){
 							success : function(result){
 								result = $.parseJSON(result);
 								$('#company').val(result["contact"]);
-								console.log(result);
 								$('input[name="id_company"]').val(result["idContact"]);
 								$('.overall').fadeOut();
 							}
@@ -132,9 +138,55 @@ $(document).ready(function(){
 			$('.overall').fadeOut();
 		});
 	});
+
+	
+	$('.order input[name="company"]').on('input',function(){
+		if($(this).val() != ""){
+			url = '../ajaxResponse/helpOrder.php?class=company&needle='+$(this).val();
+			$.ajax({url : url,
+					dataType: 'json',
+					success : function(result){
+					$('#proposition_company').html('');
+					$.each(result,function(i,item){
+						$('#proposition_company').append('<button type="button" class="list-group-item company-item" rel="'+result[i].billing_period_bis+'" alt="'+result[i].id+'">'+result[i].text+'</button>'); 
+					});
+					$('.company-item').click(function(e){
+						$('input[name="id_company"]').val($(this).attr("alt"));
+						$('input[name="company"]').val($(this).text());
+						$('input[name="billing_period_bis"]').val($(this).attr("rel"));
+						$('#proposition_company').html('');
+						e.preventDefault();
+					});
+				}
+			})
+		} else {
+			$('#proposition_company').html('');
+		}
+	});
+	$('.order input[name="employee"]').on('input',function(){
+		if($(this).val() != ""){
+			url = '../ajaxResponse/helpOrder.php?class=employee&needle='+$(this).val();
+			$.ajax({url : url,
+				dataType: 'json',
+				success : function(result){
+					$('#proposition_employee').html('');
+					console.log(result);
+					$.each(result,function(i,item){
+						$('#proposition_employee').append('<button type="button" class="list-group-item employee-item" alt="'+result[i].id+'">'+result[i].text+'</button>'); 
+					});
+					$('.employee-item').click(function(e){	
+						$('input[name="id_employee"]').val($(this).attr("alt"));
+						$('input[name="employee"]').val($(this).text());
+						$('#proposition_employee').html('');
+						e.preventDefault();
+					});
+				}
+			});
+		} else {
+			$('#proposition_employee').html('');
+		}
+	});
 });
-
-
 
 
 var Address = function(){
@@ -163,86 +215,3 @@ var Address = function(){
 
 
 
-/*function displayAddress(url,id,idem){
-	if (url == "addAddress") {
-		$.ajax({
-			url : '../ajaxResponse/'+url+'.php',
-			success : function(result){
-				$('#result').html(result);
-				$('.sendNewAddress').click(function(e){
-					e.preventDefault();
-					var url = "../controller/addAddress.php?";
-					for(var i = 0; i < $(".addAddresstodb input").length; i++){
-						url += $(".addAddresstodb input:eq("+i+")").attr('name');
-						url += "=";
-						url += $(".addAddresstodb input:eq("+i+")").val();
-						url += "&";
-
-					}
-					if(idem === 'undefined' || idem == ""){
-						idem = 0;
-					}
-					url += "idem="+idem;
-					$.ajax({
-						url : url,
-						success : function(result){
-							console.log(result);
-							result = $.parseJSON(result);
-							$('#address').val(result["address"]);
-							$('input [name="id_address"]').val(result["id"]);
-							console.log(result);
-
-							$('.overall').fadeOut();
-						}
-					})
-					return false;
-				});
-			}
-		});
-	} else {
-		$.ajax({
-			url : '../ajaxResponse/'+url+'.php?id='+id+'&idem='+idem,
-			success : function(result){
-				$('#result').html(result);
-				$('.setAddress').click(function(e){
-					e.preventDefault();
-					var url = "../controller/setAddress.php?";
-					url += "class="+$(this).attr('alt')+"&";
-					for(var i = 0; i < $(".setAddresstodb input").length; i++){
-						url += $(".setAddresstodb input:eq("+i+")").attr('name');
-						url += "="
-						url += $(".setAddresstodb input:eq("+i+")").val();
-						if(i < $(".setAddresstodb input").length - 1)
-							url+="&";
-					}
-					console.log(url);
-					// $.ajax({
-					// 	url : url,
-					// 	success : function(result){
-					// 		console.log(result);
-					// 		$('#address').val(result["address"]);
-					// 		$('input [name="id_address"]').val(result["id"]);
-					// 		console.log(result);
-
-					// 		$('.overall').fadeOut();
-					// 	}
-					// })
-					return false;
-				});
-				$('.sendAddress').click(function(e){
-					$.ajax({
-						url : '../controller/getAddress.php?idAddress='+$(this).attr('alt')+'&idEmployee='+$(this).attr('rel'),
-						success : function(result){
-							console.log(result);
-							result = $.parseJSON(result);
-							$('#address').val(result["address"]);
-							$('input[name="id_address"]').val(result["idAddress"]);
-
-							$('.overall').fadeOut();
-						}
-					})
-				});
-			}
-		});
-	}
-}*/

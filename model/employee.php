@@ -164,6 +164,10 @@
 			<td><a href="../controller/viewEmployee.php?id='.$this->id.'"><button class=\'modif_product\'><span class=\'glyphicon glyphicon-cog\' aria-hidden=\'true\'></span></button></a></td></tr>');
 		}
 
+		public function printText(){
+			return $this->surname.' '.$this->name;
+		}
+
 		public function printToModify($next){
 			$extraction = new extraction();
 			if($this->address == NULL){
