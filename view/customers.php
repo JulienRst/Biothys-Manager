@@ -7,8 +7,9 @@
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
 	<body> 
+		<?php include('../view/nav.php'); ?>
 		<div class="container">
-			<?php include('../view/nav.php'); ?>
+			<?php include('../view/header.php'); ?>
 			<h2>Customers</h2>
 			<a href="viewAddCustomer.php"><button class="btn btn-success">Add Customers</button></a>
 			<?php 
@@ -25,6 +26,7 @@
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../assets/js/datepicker.js"></script>
 		<script type="text/javascript" src="../assets/js/main.js"></script>
 	</body>
 </html>

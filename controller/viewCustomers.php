@@ -1,5 +1,5 @@
 <?php
-
+	require_once('checkSession.php');
 	require_once('../model/extraction.php');
 	require_once('../model/customer.php');
 

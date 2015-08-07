@@ -1,5 +1,5 @@
 <?php
-
+	require_once('checkSession.php');
 	require_once('../model/parameter.php');
 
 	if(isset($_GET["id"])){

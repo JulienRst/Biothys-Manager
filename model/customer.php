@@ -89,8 +89,6 @@
 
 			foreach($actual_customer as $key => $value){
 
-				echo($actual_customer[$key].'<br/>');
-
 				if($actual_customer[$key] != $this->$key && $this->$key != "" && $key != null){
 					$stmt = $this->pdo->PDOInstance->prepare("UPDATE customer SET $key = :value WHERE id = :id");
 					$stmt->bindParam(":value",$this->$key);
@@ -120,7 +118,7 @@
 		}
 
 		public function printText(){
-			echo($this->name.'<br/>'.$this->mail.'<br/>'.$this->phone_number);
+			return ($this->name.'<br/>'.$this->mail.'<br/>'.$this->phone_number);
 		}
 
 		public function printLink(){

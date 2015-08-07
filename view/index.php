@@ -9,6 +9,9 @@
 	<body> 
 
 		<?php include('../view/nav.php'); ?>
+		<div class="container">
+			<?php include('../view/header.php'); ?>
+		</div>
 
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>

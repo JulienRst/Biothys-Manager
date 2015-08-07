@@ -16,6 +16,7 @@
 
 	$item->addToDatabase();
 
-
-	header('location:'.$_GET["next"]);
+	if($_GET["next"] != "no"){
+		header('location:'.$_GET["next"]);
+	}
 ?>

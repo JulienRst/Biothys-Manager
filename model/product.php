@@ -1,7 +1,8 @@
 <?php
 
-	include_once('database.php');
-	include_once('extraction.php');
+	require_once('database.php');
+	require_once('extraction.php');
+	require_once('group_products.php');
 
 	class product {
 
@@ -13,6 +14,7 @@
 		private $price;
 		private $unit;
 		private $id_group;
+		private $group_product;
 
 		private $pdo;
 
@@ -47,6 +49,7 @@
 				foreach($stmt_get as $key => $value){
 					$this->$key = $value;
 				}
+				$this->group_product = new group_products($this->id_group);
 				return true;
 			} else {
 				return false;
@@ -170,6 +173,9 @@
 		public function getPrice(){return $this->price;}
 		public function getUnit(){return $this->unit;}
 		public function getId_group(){return $this->id_group;}
+		public function getGroup_product(){return $this->group_product;}
+
+		public function getNameDes(){return $this->name.' '.$this->description;}
 
 		public function setId($new){$this->id = $new;}
 		public function setRef($new){$this->ref = $new;}
@@ -179,5 +185,6 @@
 		public function setPrice($new){$this->price = $new;}
 		public function setUnit($new){$this->unit = $new;}
 		public function setId_group($new){$this->id_group = $new;}
+		public function setGroup_product($new){$this->group_product = $new;}
 	}
 ?>

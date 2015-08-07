@@ -1,3 +1,34 @@
+body {
+	font-size: 0;
+}
+
+.nav , .container {
+	display: inline-block;
+	box-sizing: border-box;
+	font-size: 12pt;
+	vertical-align: top;
+}
+
+.nav {
+	width: 300px;
+}
+
+.container {
+	width: calc(100% - 300px);
+	margin-bottom: 20px;
+}
+
+.jumbotron {
+	margin-top: 10%;
+}
+
+.container.connect {
+	width: 920px;
+	margin: auto;
+	display: block;
+	height: 100%;
+}
+
 .overall {
 	width: 100%;
 	height: 100%;
@@ -7,11 +38,12 @@
 	z-index: 1000;
 	background-color: rgba(0,0,0,0.8);
 	display: none;
+	font-size: 12pt;
 }
 
 .contentAjax {
 	width: 920px;
-	min-height: 500px;
+	height: 500px;
 	position: relative;
 	top: 100px;
 	right: 0;
@@ -19,6 +51,7 @@
 	margin: auto;
 	background-color: white;
 	padding: 20px;
+	overflow: scroll;
 }
 
 .remove {
@@ -40,3 +73,15 @@
 	border: solid 1.5px #121212;
 	border-radius: 3px;
 }	
+
+#parameter_product_add {
+	display: none;
+}
+
+.form-control.short {
+	width: 200px;
+}
+
+.inline *{
+	display: inline-block;
+}

@@ -7,4 +7,5 @@
 	<li role="presentation"><a href="viewCustomers.php">Customer</a></li>
 	<li role="presentation"><a href="viewEmployees.php">Employees</a></li>
 	<li role="presentation"><a href="viewOrders.php">Orders</a></li>
+	<li role="presentation"><a href="viewPartners.php">Partners</a></li>
 </ul>

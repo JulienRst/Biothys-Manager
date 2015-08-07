@@ -7,8 +7,9 @@
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
 	<body> 
+		<?php include('../view/nav.php'); ?>
 		<div class="container">
-			<?php include('../view/nav.php'); ?>
+			<?php include('../view/header.php'); ?>
 			<?php
 				if(isset($error)){
 					echo('Rien à afficher');
@@ -22,11 +23,21 @@
 					echo('<a href="eraseClass.php?id='.$company->getId().'&class=company&next=viewCompanies.php"><button class="btn btn-danger">Delete</button></a>');
 				}
 			?>
+			
+			<h4>Delivery addresses</h4>
+			<div id="delivery_address">
+				<?php 
+					$url = '../ajaxResponse/viewDeliveryAddress.php';
+					include($url); 
+				?>
+			</div>
 		</div>
+
 		<?php include('display.php'); ?>
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../assets/js/datepicker.js"></script>
 		<script type="text/javascript" src="../assets/js/main.js"></script>
 	</body>
 </html>

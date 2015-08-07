@@ -7,8 +7,11 @@
 
 	$data = $_GET["address"];
 	$data = json_decode($data,true);
-
-	$results = $extraction->searchForAddress(" ");
+	if($data["for"] == "order"){
+		$results = $extraction->searchForAddress(" ",$data["idFor"]);
+	} else {
+		$results = $extraction->searchForAddress(" ");
+	}
 
 	foreach ($results as $address) {
 		echo('<div class="ctn-addresses">');

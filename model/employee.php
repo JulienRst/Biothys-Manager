@@ -67,9 +67,12 @@
 
 			$this->birthdate = strtotime($this->birthdate);
 
+			$nname = strtolower($this->name);
+			$nsurname = strtolower($this->surname);
+
 			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO employee(name,surname,mail,short_phone,phone_number,id_address,birthdate,right_group,login,password) VALUES(:name,:surname,:mail,:short_phone,:phone_number,:id_address,:birthdate,:right_group,:login,:password)");
-			$stmt->bindParam(':name',$this->name);
-			$stmt->bindParam(':surname',$this->surname);
+			$stmt->bindParam(':name',$nname);
+			$stmt->bindParam(':surname',$nsurname);
 			$stmt->bindParam(':mail',$this->mail);
 			$stmt->bindParam(':short_phone',$this->short_phone);
 			$stmt->bindParam(':phone_number',$this->phone_number);
@@ -153,8 +156,8 @@
 				$this->getAddress();
 			}
 			$right_group = new right_group($this->right_group);
-			echo('<tr><td>'.$this->name.'</td>
-			<td>'.$this->surname.'</td>
+			echo('<tr><td>'.ucwords($this->name).'</td>
+			<td>'.ucwords($this->surname).'</td>
 			<td>'.$this->mail.'</td>
 			<td>'.$this->short_phone.'</td>
 			<td>'.$this->phone_number.'</td>
@@ -165,7 +168,7 @@
 		}
 
 		public function printText(){
-			return $this->surname.' '.$this->name;
+			return ucwords($this->surname.' '.$this->name);
 		}
 
 		public function printToModify($next){
@@ -285,8 +288,8 @@
 		}
 
 		public function getId(){return $this->id;}
-		public function getName(){return $this->name;}
-		public function getSurname(){return $this->surname;}
+		public function getName(){return ucwords($this->name);}
+		public function getSurname(){return ucwords($this->surname);}
 		public function getShort_phone(){return $this->short_phone;}
 		public function getPhone_number(){return $this->phone_number;}
 		public function getId_address(){return $this->id_address;}

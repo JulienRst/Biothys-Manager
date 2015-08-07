@@ -8,7 +8,7 @@
 	</head>
 	<body> 
 
-		<div class="container">
+		<div class="container connect">
 			<div class="jumbotron">
 				<h1>Connection to Biothys Manager</h1>
 				<form method="get" action="connection.php" class="">
@@ -42,6 +42,7 @@
 
 		<script type="text/javascript" src="../assets/js/jquery.js"></script>
 		<script type="text/javascript" src="../assets/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../assets/js/datepicker.js"></script>
 		<script type="text/javascript" src="../assets/js/main.js"></script>
 	</body>
 </html>

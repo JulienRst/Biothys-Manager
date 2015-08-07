@@ -58,7 +58,7 @@
 			} catch(Exception $e){
 				echo('Problem at '.$e->getLine().' from model address :'.$e->getMessage());
 			}
-			$this->id = $this->pdo->lastInsertId();
+			$this->id = $this->pdo->PDOInstance->lastInsertId();
 		}
 
 		public function setToDatabase(){
@@ -73,7 +73,7 @@
 
 			foreach($actual_address as $key => $value){
 				if($actual_address[$key] != $this->$key && $key != "id"){
-					$stmt = $this->pdo->prepare("UPDATE address SET $key = :value WHERE id = :id");
+					$stmt = $this->pdo->PDOInstance->prepare("UPDATE address SET $key = :value WHERE id = :id");
 					$stmt->bindParam(":value",$this->$key);
 					$stmt->bindParam(":id",$this->id);
 					try {
@@ -87,7 +87,7 @@
 		}
 
 		public function printAddress(){
-			$address = $this->line.'<br/>';
+			$address = $this->line.'<br>';
 			if($this->complement != "" && $this->complement != NULL){
 				$address .= $this->complement."<br>";
 			}

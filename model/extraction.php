@@ -1,8 +1,10 @@
 <?php
 
 	require_once('database.php');
-	require_once('../model/group_products.php');
-	require_once('../model/product.php');
+	require_once('group_products.php');
+	require_once('product.php');
+	require_once('parameter.php');
+	require_once('partner.php');
 
 	class extraction {
 
@@ -56,6 +58,27 @@
 			}
 
 			return $result_group;
+		}
+
+		public function getParametersFromType($id_type){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM parameter WHERE type = :id");
+			$stmt->bindParam(':id',$id_type);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$parameters = array();
+
+			foreach($result as $parameter){
+				$nparameter = new parameter($parameter["id"]);
+				array_push($parameters,$nparameter);
+			}
+
+			return $parameters;
 		}
 
 		public function getGroup($id = NULL){
@@ -117,6 +140,30 @@
 			return $result;
 		}
 
+		public function getProductForOrder($needle){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM product WHERE name like :name");
+			$needle = '%'.$needle.'%';
+
+			$stmt->bindParam(':name',$needle);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$result = array();
+
+			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			foreach($stmt as $product){
+				$nproduct = new product($product["id"]);
+				array_push($result,$nproduct);
+			}
+
+			return $result;
+		}
+
 		public function getRight_group($id = NULL){
 			if($id){
 				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM right_group WHERE id= :id");
@@ -146,10 +193,15 @@
 			return $result;
 		}
 
-		public function searchForAddress($string){
+		public function searchForAddress($string,$id = 0){
 			if($string != ""){
 				$string = "%".$string."%";
-				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM address WHERE country LIKE :country or zip LIKE :zip or line LIKE :line or city LIKE :city");
+				if($id == 0){
+					$stmt = $this->pdo->PDOInstance->prepare("SELECT address.id FROM address WHERE country LIKE :country or zip LIKE :zip or line LIKE :line or city LIKE :city");
+				} else {
+					$stmt = $this->pdo->PDOInstance->prepare("SELECT address.id FROM address,`order` as o,company,link_company_delivery_address WHERE o.id = :id and o.id_company = company.id and company.id = link_company_delivery_address.id_company and address.id = link_company_delivery_address.id_address and ( country LIKE :country or zip LIKE :zip or line LIKE :line or city LIKE :city )");
+					$stmt->bindParam(':id',$id);
+				}
 
 				$stmt->bindParam(':country',$string);
 				$stmt->bindParam(':zip',$string);
@@ -167,16 +219,12 @@
 				$result = array();
 
 				foreach ($stmt as $address) {
-					$address_ = new address();
-					foreach($address as $key => $value){
-						$attribute = "set".ucfirst($key);
-						$address_->$attribute($value);
-					}
+					$address_ = new address($address["id"]);
 					array_push($result,$address_);
 				}
 
-				return $result;
-				}
+				return $result;				
+			}
 		}
 
 		public function getPerfumes($id = NULL){

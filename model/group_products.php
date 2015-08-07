@@ -1,6 +1,7 @@
 <?php
 
-	include_once('database.php');
+	require_once('database.php');
+	require_once('extraction.php');
 
 	class group_products {
 
@@ -8,6 +9,7 @@
 		private $name;
 		private $type;
 		private $products;
+		private $parameters;
 
 		private $pdo;
 
@@ -38,6 +40,8 @@
 				foreach($stmt_get as $key => $value){
 					$this->$key = $value;
 				}
+				$extraction = new extraction();
+				$this->parameters = $extraction->getParametersFromType($this->type);
 				return true;
 			} else {
 				return false;
@@ -109,10 +113,19 @@
 			');
 		}
 
+		public function getJSONParameters(){
+			$result = array();
+			foreach($this->parameters as $parameter){
+				array_push($result,array("id" => $parameter->getId(),"name" => $parameter->getName()));
+			}
+			return $result;
+		}
+
 		public function getId(){return $this->id;}
 		public function getName(){return $this->name;}
 		public function getProducts(){return $this->products;}
 		public function getType(){return $this->type;}
+		public function getParameters(){return $this->parameters;}
 
 		public function setId($new){$this->id = $new;}
 		public function setName($new){$this->name = $new;}

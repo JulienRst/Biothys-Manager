@@ -10,10 +10,9 @@
 
 	$customer->setId_company($idCo);
 	$customer->setToDatabase();
+
 	$result = array('idContact' => $idCo,'contact' => $company->getName().' | '.$company->getDescription());
 
-
 	echo(json_encode($result));
-
 
 ?>

@@ -5,6 +5,133 @@ $(document).ready(function(){
 	});
 
 
+	$('.sendLineMore').click(function(){
+		var id = $(this).attr('rel');
+		$.ajax({
+			url: "setCustomerOrderId.php?id="+id+"&val="+$('input[name="line_more"]:eq(0)').val(),
+			success: function(){
+				$('#resultLineMore').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Save</div>')
+			}
+		});
+	});
+
+	$('input[name="ready"]').on('change',function(){
+		var id = $(this).attr('rel');
+		var nval = $(this).is(':checked');
+		if(nval){
+			$.ajax({url: "setOrderReady.php?id="+id+"&val=yes"});
+		} else {
+			$.ajax({url: "setOrderReady.php?id="+id+"&val=no"});
+		}
+	});
+
+	$('#setBillingPeriodBis').click(function(e){
+		var id = $("input[name='billing_period_bis']").attr('rel');
+		var bpb = $("input[name='billing_period_bis']").val();
+		$.ajax({
+			url : "setBillingPeriodBis.php?id="+id+"&bpb="+bpb,
+			success : function(result){
+				result = $.parseJSON(result);
+				$('#resultSetBpb').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Value is set</strong></div>');
+			}
+		});
+		e.preventDefault();
+	});
+
+	$('#addProductToOrder').click(function(e){
+		$('.overall').fadeIn();
+		var id_order = $(this).attr("rel")
+
+		$.ajax({
+			url : "../ajaxResponse/addProductToOrder.php",
+			success : function(result) {
+
+				$('#result').html(result);
+				$('input[name="id_order"]').attr('value',id_order);
+
+				$('#searchProductInOrder').on('input',function(){
+					if($(this).val() != ""){
+						url = '../controller/searchProductInOrder.php?needle='+$(this).val();
+						$.ajax({url : url,
+							dataType: 'json',
+							success : function(result){
+								$('#list-product').html('');
+								$.each(result,function(i,item){
+									$('#list-product').append('<button type="button" class="list-group-item product-item" rel="'+result[i].price+'" alt="'+result[i].id+'" displayparameter="'+result[i].isParameter+'">'+result[i].text+'</button>');
+									$('#list-product button').last().click(function(){
+										var isParam = result[i].isParameter;
+										var params = result[i].parameters;
+										if(isParam == true){
+											$('#parameter_product_add').fadeIn();
+											$.each(params,function(i,item){
+												$('#parameter_product_add select').append('<option value="'+item.id+'">'+item.name+'</option>')
+											});
+										} else {
+											//do nothing ?
+										}
+									});
+								});
+								$('.product-item').click(function(e){	
+									$('input[name="id_product"]').val($(this).attr("alt"));
+									$('input[name="product"]').val($(this).text());
+									$('input[name="price"]').val($(this).attr('alt'));
+									$('#list-product').html('');
+									e.preventDefault();
+								});
+							}
+						});
+					} else {
+						$('#list-product').html('');
+					}
+				});
+			}
+		});
+
+		$('.remove').click(function(){
+			$('.overall').fadeOut();
+		});
+
+		e.preventDefault();
+	});
+
+	$('.add_delivery_address').click(function(e){
+		$('.overall').fadeIn();
+		var id_company = $(this).attr("rel");
+		$.ajax({
+			url: '../ajaxResponse/addAddress.php',
+			success: function(result){
+				$('#result').html(result);
+				$('.sendNewAddress').click(function(e){
+					var url = '../controller/addDeliveryAddress.php?';
+					for(var i = 0; i < $(".addAddresstodb input").length; i++){
+						url += $(".addAddresstodb input:eq("+i+")").attr('name');
+						url += "=";
+						url += $(".addAddresstodb input:eq("+i+")").val();
+						url += "&";
+					}
+					url += 'id_company='+id_company;
+					$.ajax({
+						url :  url,
+						success : function(result){
+							$.ajax({
+								url : '../ajaxResponse/viewDeliveryAddress.php?id='+id_company,
+								success : function(result){
+									$('#delivery_address').html(result);
+									$('.overall').fadeOut();
+								}
+							})
+						}
+					});
+					e.preventDefault();
+				});
+			}
+		})
+
+		$('.remove').click(function(){
+			$('.overall').fadeOut();
+		});
+		e.preventDefault();
+	})
 
 	$('.display').click(function(e){
 		$('.overall').fadeIn();
@@ -38,7 +165,7 @@ $(document).ready(function(){
 								console.log(result);
 								result = $.parseJSON(result);
 								$('#'+address.step).val(result["address"]);
-								$('input[name="id_address"]').val(result["idAddress"]);
+								$('input[name="'+ address.step +'"]').val(result["idAddress"]);
 
 								$('.overall').fadeOut();
 							}
@@ -60,7 +187,7 @@ $(document).ready(function(){
 								console.log(result);
 								result = $.parseJSON(result);
 								$('#'+address.step).val(result["address"]);
-								$('input[name="id_address"]').val(result["idAddress"]);
+								$('input[name="id_'+ addressB.step +'"]').val(result["idAddress"]);
 								$('.overall').fadeOut();
 							}
 						})
@@ -73,6 +200,8 @@ $(document).ready(function(){
 						addressB.idFor = address.idFor;
 						addressB.step = address.step;
 						addressB.id = 0;
+
+						console.log(addressB);
 
 						url = "../controller/addAddress.php?"
 
@@ -91,8 +220,7 @@ $(document).ready(function(){
 								console.log(result);
 								result = $.parseJSON(result);
 								$('#'+address.step).val(result["address"]);
-								$('input[name="id_address"]').val(result["idAddress"]);
-
+								$('input[name="id_'+ address.step +'"]').val(result["idAddress"]);
 								$('.overall').fadeOut();
 							}
 						})
@@ -109,8 +237,8 @@ $(document).ready(function(){
 							url : url,
 							success : function(result){
 								result = $.parseJSON(result);
-								$('#contact').val(result["customer"]);
-								$('input[name="id_contact"]').val(result["idCustomer"]);
+								$('#contact').val(result["contact"]);
+								$('input[name="id_contact"]').val(result["idContact"]);
 								$('.overall').fadeOut();
 							}
 						});

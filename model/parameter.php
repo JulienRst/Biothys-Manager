@@ -93,7 +93,7 @@
 			echo('<tr>');
 				echo('<td>'.$this->ref.'</td>');
 				echo('<td>'.$this->type.'</td>');
-				echo('<td>'.utf8_encode($this->name).'</td>');
+				echo('<td>'.$this->name.'</td>');
 				echo('<td><a href="viewParameter.php?id='.$this->id.'"><button><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>');
 			echo('</tr>');
 		}
@@ -107,7 +107,7 @@
 					<input name="ref" type="number" class="form-control" value="'.$this->ref.'">
 				</div>
 				<div class="form-group">
-					<label for="ref">Type</label>
+					<label for="type">Type</label>
 					<input name="type" type="number" class="form-control" value="'.$this->type.'">
 				</div>
 				<div class="form-group">

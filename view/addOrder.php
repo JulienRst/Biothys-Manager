@@ -8,8 +8,9 @@
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
 	<body> 
+		<?php include('../view/nav.php'); ?>
 		<div class="container">
-			<?php include('../view/nav.php'); ?>
+			<?php include('../view/header.php'); ?>
 			<h2>Add a new Order</h2>
 			<form class="order" method="get" action="addOrder.php">
 				<div class="form-group">

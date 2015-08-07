@@ -23,6 +23,6 @@
 	}
 	
 
-	$json = json_encode($json,JSON_FORCE_OBJECT);
+	$json = json_encode($json);
 	echo($json);
 ?>

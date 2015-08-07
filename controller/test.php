@@ -1,8 +1,8 @@
 <?php
-	require_once('../model/company.php');
+	require_once('../model/order.php');
 
-	$result = new company(1);
+	$result = new order();
 	
-	var_dump($result);
+	$result->addToDatabase();
 	
 ?>

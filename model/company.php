@@ -5,6 +5,7 @@
 	require_once('group_company.php');
 	require_once('customer.php');
 	require_once('extraction.php');
+	require_once('link_company_delivery_address.php');
 
 	class company {
 
@@ -21,7 +22,10 @@
 		private $nationality;
 		private $description;
 		private $normal_billing_period;
+		private $ust_id;
 		private $phone_number;
+
+		private $delivery_addresses;
 
 		private $pdo;
 
@@ -62,6 +66,25 @@
 				$this->group_company = new group_company($this->id_group_company);
 				$this->contact = new customer($this->id_contact);
 
+				$this->delivery_addresses = array();
+
+				$stmt_da = $this->pdo->PDOInstance->prepare("SELECT id_address FROM link_company_delivery_address WHERE id_company = :id");
+				$stmt_da->bindParam(':id',$this->id);
+
+				try {
+					$stmt_da->execute();
+				} catch(Exception $e){
+					echo("Problem at ".$e->getLine()." from model company :".$e->getMessage());
+				}
+
+				$result_da = $stmt_da->fetchAll(PDO::FETCH_ASSOC);
+
+				foreach($result_da as $da){
+					$nda = new address($da["id_address"]);
+					array_push($this->delivery_addresses,$nda);
+				}
+
+
 				return true;
 			} else {
 				return false;
@@ -78,6 +101,7 @@
 			$stmt->bindParam(':nationality',$this->nationality);
 			$stmt->bindParam(':description',$this->description);
 			$stmt->bindParam(':normal_billing_period',$this->normal_billing_period);
+			$stmt->bindParam(':ust_id',$this->ust_id);
 			$stmt->bindParam(':phone_number',$this->phone_number);
 			try {
 				$stmt->execute();
@@ -98,7 +122,7 @@
 
 			foreach($actual_company as $key => $value){
 				if($actual_company[$key] != $this->$key){
-					$stmt = $this->pdo->prepare("UPDATE company SET $key = :value WHERE id = :id");
+					$stmt = $this->pdo->PDOInstance->prepare("UPDATE company SET $key = :value WHERE id = :id");
 					$stmt->bindParam(":value",$this->$key);
 					$stmt->bindParam(":id",$this->id);
 					try {
@@ -189,6 +213,14 @@
 					echo('
 					</select>
 				</div>
+				<div class="form-group">
+					<label for="ust_id">UST Id</label>
+					<input name="ust_id" type="text" class="form-control" value="'.$this->ust_id.'">
+				</div>
+				<div class="form-group">
+					<label for="normal_billing_period">Normal Billing Period (in day)</label>
+					<input name="normal_billing_period" type="text" class="form-control" value="'.$this->normal_billing_period.'">
+				</div>
 			');
 		}
 
@@ -240,6 +272,8 @@
 					<button id="setAddress" alt="company" step="receiving_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button></a>
 					<button id="getAddress" alt="company" step="receiving_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
 				</div>
+				');
+				echo('
 				<div class="form-group">
 					<label for="id_group_company">Type of company</label>
 					<select name="id_group_company" class="form-control">
@@ -255,6 +289,14 @@
 					echo('
 					</select>
 				</div>
+				<div class="form-group">
+					<label for="ust_id">UST Id</label>
+					<input name="ust_id" type="text" class="form-control" value="'.$this->ust_id.'">
+				</div>
+				<div class="form-group">
+					<label for="normal_billing_period">Normal Billing Period (in day)</label>
+					<input name="normal_billing_period" type="text" class="form-control" value="'.$this->normal_billing_period.'">
+				</div>
 			');
 		}
 
@@ -268,10 +310,13 @@
 		public function getDescription(){return $this->description;}
 		public function getNormal_billing_period(){return $this->normal_billing_period;}
 		public function getPhone_number(){return $this->phone_number;}
+		public function getUst_id(){return $this->ust_id;}
 
 		public function getGroup_company(){return $this->group_company;}
 		public function getAddress(){return $this->address;}
 		public function getContac(){return $this->contact;}
+		public function getDelivery_addresses(){return $this->delivery_addresses;}
+		public function getReceiving_address(){return $this->receiving_address;}
 
 		public function setId($new){$this->id = $new;}
 		public function setId_group_company($new){$this->id_group_company = $new;}
@@ -283,6 +328,7 @@
 		public function setDescription($new){$this->description = $new;}
 		public function setNormal_billing_period($new){$this->normal_billing_period = $new;}
 		public function setPhone_number($new){$this->phone_number = $new;}
+		public function setUst_id($new){$this->ust_id = $new;}
 
 		public function setGroup_company($new){$this->group_company = $new;}
 		public function setAddress($new){$this->address = $new;}

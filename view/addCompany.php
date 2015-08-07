@@ -7,8 +7,9 @@
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
 	<body> 
+		<?php include('../view/nav.php'); ?>
 		<div class="container">
-			<?php include('../view/nav.php'); ?>
+			<?php include('../view/header.php'); ?>
 			<h2>Add a new company</h2>
 			<form method="get" action="addClass.php">
 				<input name="next" type="hidden" value="viewCompanies.php">

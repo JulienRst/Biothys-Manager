@@ -4,13 +4,17 @@
 	require_once('company.php');
 	require_once('employee.php');
 	require_once('address.php');
+	require_once('link_order_product.php');
 
 
 	class order {
 
 		private $id;
+		private $ref;
+		private $customer_order_id;
 		private $id_company;
 		private $company;
+		private $ready;
 		private $id_employee;
 		private $employee;
 		private $id_delivery_address;
@@ -23,6 +27,8 @@
 		private $date_receipt;
 		private $date_billing;
 		private $line_product;
+		private $price;
+		private $delayForDelivery;
 
 		private $pdo;
 
@@ -37,6 +43,8 @@
 				$this->employee = new employee($this->id_employee);
 				$this->delivery_address = new address($this->id_delivery_address);
 				$this->line_product = array();
+				$this->price = 0;
+				$this->getLineProduct();
 			}
 		}
 
@@ -53,6 +61,7 @@
 
 			foreach($stmt as $line_product){
 				$line_product = new link_order_product($line_product["id"]);
+				$this->price += $line_product->getAmount() * $line_product->getPrice_bis();
 				array_push($this->line_product, $line_product);
 			}
 
@@ -80,10 +89,33 @@
 		}
 
 		public function addToDatabase(){
-			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(id_company,id_employee,billing_period_bis,date_issuing,date_received,date_entry) VALUES(:id_company,:id_employee,:billing_period_bis,:date_issuing,:date_received,:date_entry)");
+			//Avant d'ajouter la commande dans la base
+				//On récupère l'année en cours
+				$year = date('y');
+				//On récupère le ts de début et de fin de l'année en cours
+				$tsdeb = strtotime('01/01/'.strtoupper($year));
+				$tsend = strtotime('01/01/'.strtoupper((string)intval($year)+1));
+				//gmt + 1
+				$stmt_ref = $this->pdo->PDOInstance->prepare("SELECT MAX(ref) as max_ref FROM `order` WHERE date_entry >= :deb and date_entry < :end");
+				$stmt_ref->bindParam(':deb',$tsdeb);
+				$stmt_ref->bindParam(':end',$tsend);
+
+				try {
+					$stmt_ref->execute();
+				} catch(Exception $e){
+					echo('Problem at '.$e->getLine().' from model order :'.$e->getMessage());
+				}
+				$req_ref = $stmt_ref->fetch();
+				$this->ref = $req_ref["max_ref"] + 1;
+			
+
+
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(ref,id_company,id_employee,billing_period_bis,ready,date_issuing,date_received,date_entry) VALUES(:ref,:id_company,:id_employee,:billing_period_bis,:ready,:date_issuing,:date_received,:date_entry)");
+			$stmt->bindParam(':ref',$this->ref);
 			$stmt->bindParam(':id_company',$this->id_company);
 			$stmt->bindParam(':id_employee',$this->id_employee);
 			$stmt->bindParam(':billing_period_bis',$this->billing_period_bis);
+			$stmt->bindParam(':ready','no');
 			$stmt->bindParam(':date_issuing',$this->date_issuing);
 			$stmt->bindParam(':date_received',$this->date_received);
 			$stmt->bindParam(':date_entry',$this->date_entry);
@@ -161,9 +193,11 @@
 		}
 
 		public function getId(){return $this->id;}
+		public function getRef(){return $this->ref;}
 		public function getId_company(){return $this->id_company;}
 		public function getId_employee(){return $this->id_employee;}
 		public function getId_delivery_address(){return $this->id_delivery_address;}
+		public function getDelivery_address(){return $this->delivery_address;}
 		public function getBilling_period_bis(){return $this->billing_period_bis;}
 		public function getDate_issuing(){return $this->date_issuing;}
 		public function getDate_received(){return $this->date_received;}
@@ -172,8 +206,17 @@
 		public function getDate_receipt(){return $this->date_receipt;}
 		public function getDate_billing(){return $this->date_billing;}
 		public function getLine_product(){return $this->line_product;}
+		public function getCustomer_order_id(){return $this->customer_order_id;}
+		public function getReady(){return $this->ready;}
+
+		public function getPrice(){return $this->price;}
+		public function getEmployee(){return $this->employee;}
+		public function getDelayForDelivery(){
+			return 0;
+		}
 
 		public function setId($new){$this->id = $new;}
+		public function setRef($new){$this->ref = $new;}
 		public function setId_company($new){$this->id_company = $new;}
 		public function setId_employee($new){$this->id_employee = $new;}
 		public function setId_delivery_address($new){$this->id_delivery_address = $new;}
@@ -185,5 +228,7 @@
 		public function setDate_receipt($new){$this->date_receipt = $new;}
 		public function setDate_billing($new){$this->date_billing = $new;}
 		public function setLine_product($new){$this->line_product = $new;}
+		public function setCustomer_order_id($new){$this->customer_order_id = $new;}
+		public function setReady($new){$this->ready = $new;}
 	}
 ?>
