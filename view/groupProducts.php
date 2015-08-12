@@ -13,10 +13,10 @@
 			
 			
 
-			<a href="viewAddGroupProduct.php"><button class="btn btn-success">Add a group</button></a>
-			<h2>List of Group Products</h2>	
+			<a href="viewAddGroupProduct.php"><button class="btn btn-success"><?php echo($tf->getText(27).' '.$tf->getText(8));?></button></a>
+			<h2><?php echo($tf->getText(26).' '.$tf->getText(8));?></h2>	
 			<table class="table table-stripped">
-			<tr><th>Name</th><th>Type</th><th>Modify</th></tr>
+			<tr><th><?php echo($tf->getText(25));?></th><th><?php echo($tf->getText(28));?></th><th><?php echo($tf->getText(20));?></th></tr>
 			<?php
 				foreach($groups as $group){
 					echo('<tr>');

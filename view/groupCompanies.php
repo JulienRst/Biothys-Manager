@@ -13,10 +13,10 @@
 			
 			
 
-			<a href="viewAddGroupCompany.php"><button class="btn btn-success">Add a group company</button></a>
-			<h2>List of Group Company</h2>	
+			<a href="viewAddGroupCompany.php"><button class="btn btn-success"><?php echo($tf->getText(27).' '.$tf->getText(10));?></button></a>
+			<h2><?php echo($tf->getText(26).' '.$tf->getText(10));?></h2>	
 			<table class="table table-stripped">
-			<tr><th>Ref</th><th>Designation</th><th>Modify</th></tr>
+			<tr><th><?php echo($tf->getText(59));?></th><th><?php echo($tf->getText(58));?></th><th><?php echo($tf->getText(20));?></th></tr>
 			<?php
 				foreach($group_companies as $group_company){
 					$group_company->printTR();

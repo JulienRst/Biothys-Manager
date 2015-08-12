@@ -100,11 +100,11 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="country">Country</label>
+					<label for="country">'.$this->tf->getText(84).'</label>
 					<input name="country" type="text" class="form-control" value="'.$this->country.'">
 				</div>
 				<div class="form-group">
-					<label for="ref">Ref</label>
+					<label for="ref">'.$this->tf->getText(59).'</label>
 					<input name="ref" type="number" class="form-control" value="'.$this->ref.'">
 				</div>
 			');

@@ -20,6 +20,7 @@
 		public function __construct($id = 0){
 
 			$this->pdo = database::getInstance();
+			$this->tf = new textFinder();
 
 			if($id != 0){
 				$this->id = $id;
@@ -140,19 +141,19 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 				<div class="form-group">
-					<label for="nationality">Nationality</label>
+					<label for="nationality">'.$this->tf->getText(50).'</label>
 					<input name="nationality" type="text" class="form-control" value="'.$this->nationality.'">
 				</div>
 				<div class="form-group">
-					<label for="mail">Mail</label>
+					<label for="mail">'.$this->tf->getText(51).'</label>
 					<input name="mail" type="mail" class="form-control" value="'.$this->mail.'">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">Phone number</label>
+					<label for="phone_number">'.$this->tf->getText(46).'</label>
 					<input name="phone_number" type="text" class="form-control" value="'.$this->phone_number.'">
 				</div>
 			');
@@ -163,29 +164,29 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 				<div class="form-group">
-					<label for="nationality">Nationality</label>
+					<label for="nationality">'.$this->tf->getText(50).'</label>
 					<input name="nationality" type="text" class="form-control" value="'.$this->nationality.'">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">Phone number</label>
+					<label for="phone_number">'.$this->tf->getText(46).'</label>
 					<input name="phone_number" type="text" class="form-control" value="'.$this->phone_number.'">
 				</div>
 				<div class="form-group">
-					<label for="mail">Mail</label>
+					<label for="mail">'.$this->tf->getText(51).'</label>
 					<input name="mail" type="mail" class="form-control" value="'.$this->mail.'">
 				</div>
 				<div class="form-group">
-					<label for="id_company">Company (add or set the address with the button bellow not the textarea)</label>
+					<label for="id_company">'.$this->tf->getText(31).' '.$this->tf->getText(69).'</label>
 					<input type="text" id="company" class="form-control" value="'.$this->company_name.'">
 					<input name="id_company" type="hidden" class="form-control" value="'.$this->id_company.'">
 					<button id="getCompany" alt="customer" step="company" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
 				</div>
 				<div class="form-group">
-					<label for="id_address">Address (add or set the address with the button bellow not the textarea)</label>
+					<label for="id_address">'.$this->tf->getText(44).' '.$this->tf->getText(69).'</label>
 					<input type="text" id="address" class="form-control" value="'.str_replace('<br/>',' ',$this->address->printAddress()).'">
 					<input name="id_address" type="hidden" class="form-control" value="'.$this->id_address.'">
 					<button id="addAddress" alt="customer" step="address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></a>

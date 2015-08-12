@@ -27,8 +27,11 @@
 		private $date_receipt;
 		private $date_billing;
 		private $line_product;
-		private $price;
+		private $price; //total price
 		private $delayForDelivery;
+		private $final_price; //price + tva
+		private $already_paid;
+		private $finish;
 
 		private $pdo;
 
@@ -45,6 +48,16 @@
 				$this->line_product = array();
 				$this->price = 0;
 				$this->getLineProduct();
+
+				//
+				$tva = 0;
+				if($this->company->getUst_id() != "" && $this->company->getNationality() != "GER"){
+					//
+				} else {
+					$tva = round(19*$order->getPrice()/100,2);
+				}
+
+				$this->final_price = $this->price + $tva;
 			}
 		}
 
@@ -108,14 +121,15 @@
 				$req_ref = $stmt_ref->fetch();
 				$this->ref = $req_ref["max_ref"] + 1;
 			
+			$no = "no";
 
-
-			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(ref,id_company,id_employee,billing_period_bis,ready,date_issuing,date_received,date_entry) VALUES(:ref,:id_company,:id_employee,:billing_period_bis,:ready,:date_issuing,:date_received,:date_entry)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(ref,id_company,id_employee,billing_period_bis,ready,finish,date_issuing,date_received,date_entry) VALUES(:ref,:id_company,:id_employee,:billing_period_bis,:ready,:finish,:date_issuing,:date_received,:date_entry)");
 			$stmt->bindParam(':ref',$this->ref);
 			$stmt->bindParam(':id_company',$this->id_company);
 			$stmt->bindParam(':id_employee',$this->id_employee);
 			$stmt->bindParam(':billing_period_bis',$this->billing_period_bis);
-			$stmt->bindParam(':ready','no');
+			$stmt->bindParam(':ready',$no);
+			$stmt->bindParam(':finish',$no);
 			$stmt->bindParam(':date_issuing',$this->date_issuing);
 			$stmt->bindParam(':date_received',$this->date_received);
 			$stmt->bindParam(':date_entry',$this->date_entry);
@@ -168,8 +182,8 @@
 								   "date_received" => $this->date_received,
 								   "date_entry" => $this->date_entry,
 								   "date_shipment" => $this->date_shipment,
-								   "date_entry" => $this->date_entry,
-								   "date_billing" => $this->date_billing);
+								   "date_receipt" => $this->date_receipt
+								   );
 				foreach($tableDate as $date){
 					if($date == 0){
 						echo('<td>not yet specified</td>');
@@ -211,9 +225,12 @@
 
 		public function getPrice(){return $this->price;}
 		public function getEmployee(){return $this->employee;}
-		public function getDelayForDelivery(){
+		public function getDelayForDelivery(){ // to do !!!!!!!!!!!!!!!!!
 			return 0;
 		}
+		public function getAlready_paid(){return $this->already_paid;}
+		public function getFinal_price(){return $this->final_price;}
+		public function getFinish(){return $this->finish;}
 
 		public function setId($new){$this->id = $new;}
 		public function setRef($new){$this->ref = $new;}
@@ -230,5 +247,8 @@
 		public function setLine_product($new){$this->line_product = $new;}
 		public function setCustomer_order_id($new){$this->customer_order_id = $new;}
 		public function setReady($new){$this->ready = $new;}
+		public function setAlready_paid($new){$this->already_paid = $new;}
+		public function setFinal_price($new){$this->final_price = $new;}
+		public function setFinish($new){$this->finish = $new;}
 	}
 ?>

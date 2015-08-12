@@ -11,12 +11,12 @@
 		<div class="container">
 			<?php include('../view/header.php'); ?>
 			
-			<h2>Add a new parameter</h2>
+			<h2><?php echo($tf->getText(27).' '.$tf->getText(9)); ?></h2>
 
 			<?php
 				echo('<form method="get" action="addParameter.php">');
 				$parameter->printToModify("viewParameters.php");
-				echo('<button class="btn btn-success" type="submit">Add Parameter</button>
+				echo('<button class="btn btn-success" type="submit">'.$tf->getText(27).' '.$tf->getText(9).'</button>
 				</form>');
 			?>
 		</div>

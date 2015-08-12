@@ -11,12 +11,12 @@
 		<div class="container">
 			<?php include('../view/header.php'); ?>
 			
-			<h2>Add a new employee</h2>
+			<h2><?php echo($tf->getText(27).' '.$tf->getText(33));?></h2>
 
 			<?php
 				echo('<form method="get" action="addEmployee.php">');
 				$product->printToAdd("viewEmployees.php");
-				echo('<button class="btn btn-success" type="submit">Add Employee</button>
+				echo('<button class="btn btn-success" type="submit">'.$tf->getText(27).' '.$tf->getText(33).'</button>
 				</form>');
 			?>
 		</div>

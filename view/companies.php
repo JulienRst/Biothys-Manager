@@ -10,10 +10,21 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<a href="viewAddCompany.php"><button class="btn btn-success">Add a Company</button></a>
-			<?php 
-				echo('<table class="table table-stripped">');
-				echo('<tr><th>Name</th><th>Group Company</th><th>Description</th><th>Contact</th><th>Address</th><th>Phone number</th><th>Modify</th></tr>');
+			<a href="viewAddCompany.php"><button class="btn btn-success"><?php echo($tf->getText(30).' '.$tf->getText(31)); ?></button></a>
+		 	<br>
+		 	<input id="searchCompany" class="form-control small" type="text">
+		 	<br>
+			<table class="table table-stripped">
+			<tr>
+				<th><?php echo($tf->getText(25));?></th>
+				<th><?php echo($tf->getText(41));?></th>
+				<th><?php echo($tf->getText(42));?></th>
+				<th><?php echo($tf->getText(43));?></th>
+				<th><?php echo($tf->getText(44));?></th>
+				<th><?php echo($tf->getText(45));?></th>
+				<th><?php echo($tf->getText(20));?></th>
+			</tr>
+			<?php
 				foreach($companies as $company){
 					$company->printTR();
 				}

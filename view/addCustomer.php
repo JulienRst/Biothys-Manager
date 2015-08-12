@@ -10,11 +10,11 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<h2>Add a new customer</h2>
+			<h2><?php echo($tf->getText(27).' '.$tf->getText(32));?></h2>
 			<form method="get" action="addClass.php">
 				<input name="class" type="hidden" value="customer">
 				<?php $customer->printToAdd("viewCustomers.php"); ?>
-				<button class="btn btn-success" type="submit">Add a Customer</button>
+				<button class="btn btn-success" type="submit"><?php echo($tf->getText(27).' '.$tf->getText(32));?></button>
 			</form>
 		</div>
 

@@ -5,7 +5,13 @@
 
 	$extraction = new extraction();
 
-	$orders = $extraction->getOrders();
+	if(isset($_GET["display"])){
+		$display = $_GET["display"];
+	} else {
+		$display = "all";
+	}
+
+	$orders = $extraction->getOrders($display);
 
 	include_once('../view/orders.php');
 ?>

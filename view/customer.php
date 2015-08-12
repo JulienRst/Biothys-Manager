@@ -11,7 +11,7 @@
 		<div class="container">
 			<?php include('../view/header.php'); ?>
 			
-			<h2>Modify Customer : <?php echo($customer->getName());?></h2>
+			<h2><?php echo($tf->getText(20));?> : <?php echo($customer->getName());?></h2>
 			<form method="get" action="setClass.php">
 				<input type="hidden" name="class" value="customer">
 				<?php
@@ -19,12 +19,12 @@
 					$customer->printToModify("viewCustomers.php");
 
 				?>
-				<button type="submit" class="btn btn-success">Set the customer</button>
+				<button type="submit" class="btn btn-success"><?php echo($tf->getText(48).' '.$tf->getText(32));?></button>
 			</form>
-			<h2>Delete Customer (irreversible)</h2>
+			<h2><?php echo($tf->getText(49));?></h2>
 			<?php
 
-				echo('<a href="deleteClass.php?class=customer&id='.$customer->getId().'"><button class="btn btn-danger">Delete the customer</button></a>');
+				echo('<a href="deleteClass.php?class=customer&id='.$customer->getId().'"><button class="btn btn-danger">'.$tf->getText(22).' '.$tf->getText(32).'</button></a>');
 
 			?>
 		</div>

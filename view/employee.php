@@ -12,16 +12,39 @@
 			<?php include('../view/header.php'); ?>
 			<?php
 				if(isset($error)){
-					echo('Rien à afficher');
+					echo($tf->getText(18));
 				} else {
-					echo('<h2>You\'re going to modify : '.$employee->getSurname().' '.$employee->getName().'</h2>');
+					echo('<h2>'.$tf->getText(19).' '.$employee->getSurname().' '.$employee->getName().'</h2>');
 					echo('<form method="get" action="setEmployee.php">');
 					$employee->printToModify('viewEmployees.php');
-					echo('<button class="btn btn-primary" type="submit">Modify</button>
+					echo('<button class="btn btn-primary" type="submit">'.$tf->getText(20).'</button>
 					</form>');
-					echo('<h2>Deleting an employee is irreversible</h2>');
-					echo('<a href="eraseEmployee.php?id='.$employee->getId().'""><button class="btn btn-danger">Delete</button></a>');
+					echo('<h2>'.$tf->getText(52).'</h2>');
+					echo('<a href="eraseEmployee.php?id='.$employee->getId().'""><button class="btn btn-danger">'.$tf->getText(22).'</button></a>');
 				}
+			?>
+
+			<h2>Précédentes Commandes</h2>
+
+			<table class="table table-stripped">
+				<tr>
+					<th>Id</th>
+					<th><?php echo($tf->getText(31));?></th>
+					<th><?php echo($tf->getText(33));?></th>
+					<th><?php echo($tf->getText(47));?></th>
+					<th><?php echo($tf->getText(37));?></th>
+					<th><?php echo($tf->getText(38));?></th>
+					<th><?php echo($tf->getText(39));?></th>
+					<th><?php echo($tf->getText(82));?></th>
+					<th><?php echo($tf->getText(81));?></th>
+					<th><?php echo($tf->getText(83));?></th>
+					<th><?php echo($tf->getText(20));?></th>
+				</tr>
+			<?php
+				foreach($orders as $order){
+					$order->printTR();
+				}
+				echo('</table>');
 			?>
 		</div>
 		<?php include('../view/display.php');?>

@@ -6,6 +6,7 @@
 	require_once('customer.php');
 	require_once('extraction.php');
 	require_once('link_company_delivery_address.php');
+	include_once('../controller/getText.php');
 
 	class company {
 
@@ -38,6 +39,7 @@
 			$this->normal_billing_period = "";
 			$this->receiving_address = new address();
 			$this->billing_address = new address();
+			$this->tf = new textFinder();
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();
@@ -92,7 +94,15 @@
 		}
 
 		public function addToDatabase(){
-			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO company(id_group_company,id_contact,id_billing_address,id_receiving_address,name,nationality,description,normal_billing_period,phone_number) VALUES(:id_group_company,:id_contact,:id_billing_address,:id_receiving_address,:name,:nationality,:description,:normal_billing_period,:phone_number)");
+
+			$stmt_getId = $this->pdo->PDOInstance->prepare("SELECT MAX(id) as lid FROM company");
+			$stmt_getId->execute();
+			$ctnid = $stmt_getId->fetch();
+			$id = $ctnid["lid"] + 1;
+
+
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO company(id,id_group_company,id_contact,id_billing_address,id_receiving_address,ust_id,name,nationality,description,normal_billing_period,phone_number) VALUES(:id,:id_group_company,:id_contact,:id_billing_address,:id_receiving_address,:ust_id,:name,:nationality,:description,:normal_billing_period,:phone_number)");
+			$stmt->bindParam(':id',$id);
 			$stmt->bindParam(':id_group_company',$this->id_group_company);
 			$stmt->bindParam(':id_contact',$this->id_contact);
 			$stmt->bindParam(':id_billing_address',$this->id_billing_address);
@@ -183,27 +193,26 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 				<div class="form-group">
-					<label for="nationality">Nationality</label>
+					<label for="nationality">'.$this->tf->getText(50).'</label>
 					<input name="nationality" type="text" class="form-control" value="'.$this->nationality.'">
 				</div>
 				<div class="form-group">
-					<label for="description">Description</label>
+					<label for="description">'.$this->tf->getText(42).'</label>
 					<input name="description" type="text" class="form-control" value="'.$this->description.'">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">Phone number</label>
+					<label for="phone_number">'.$this->tf->getText(45).'</label>
 					<input name="phone_number" type="text" class="form-control" value="'.$this->phone_number.'">
 				</div>
 				<div class="form-group">
-					<label for="id_group_company">Type of company</label>
+					<label for="id_group_company">'.$this->tf->getText(85).'</label>
 					<select name="id_group_company" class="form-control">
 					');
 						foreach($groups as $group){
-							echo('hey');
 							if($this->id_group_company == $group->getId()){
 								echo('<option selected="selected" value="'.$group->getId().'">'.ucfirst($group->getDesignation()).'</option>');
 							} else {
@@ -218,7 +227,7 @@
 					<input name="ust_id" type="text" class="form-control" value="'.$this->ust_id.'">
 				</div>
 				<div class="form-group">
-					<label for="normal_billing_period">Normal Billing Period (in day)</label>
+					<label for="normal_billing_period">'.$this->tf->getText(86).'</label>
 					<input name="normal_billing_period" type="text" class="form-control" value="'.$this->normal_billing_period.'">
 				</div>
 			');
@@ -235,29 +244,29 @@
 				<input type="hidden" name="next" value="'.$next.'">
 				<input type="hidden" name="class" value="company">
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 				<div class="form-group">
-					<label for="nationality">Nationality</label>
+					<label for="nationality">'.$this->tf->getText(50).'</label>
 					<input name="nationality" type="text" class="form-control" value="'.$this->nationality.'">
 				</div>
 				<div class="form-group">
-					<label for="description">Description</label>
+					<label for="description">'.$this->tf->getText(42).'</label>
 					<input name="description" type="text" class="form-control" value="'.$this->description.'">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">Phone number</label>
+					<label for="phone_number">'.$this->tf->getText(45).'</label>
 					<input name="phone_number" type="text" class="form-control" value="'.$this->phone_number.'">
 				</div>
 				<div class="form-group">
-					<label for="id_contact">Contact (add or set the address with the button bellow not the textarea)</label>
+					<label for="id_contact">'.$this->tf->getText(43). ' '.$this->tf->getText(69).'</label>
 					<input type="text" id="contact" class="form-control" value="'.$this->contact->getName().' | '.$this->contact->getMail().' | '.$this->contact->getPhone_number().'">
 					<input name="id_contact" type="hidden" class="form-control" value="'.$this->id_contact.'">
 					<button id="getContact" alt="company" step="billing_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
 				</div>
 				<div class="form-group">
-					<label for="id_billing_address">Billing Address (add or set the address with the button bellow not the textarea)</label>
+					<label for="id_billing_address">'.$this->tf->getText(87). ' '.$this->tf->getText(69).'</label>
 					<input type="text" id="billing_address" class="form-control" value="'.str_replace('<br/>',' ',$this->billing_address->printAddress()).'">
 					<input name="id_billing_address" type="hidden" class="form-control" value="'.$this->id_billing_address.'">
 					<button id="addAddress" alt="company" step="billing_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></a>
@@ -265,7 +274,7 @@
 					<button id="getAddress" alt="company" step="billing_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
 				</div>
 				<div class="form-group">
-					<label for="id_receiving_address">Receiving Address (add or set the address with the button bellow not the textarea)</label>
+					<label for="id_receiving_address">'.$this->tf->getText(88). ' '.$this->tf->getText(69).'</label>
 					<input type="text" id="receiving_address" class="form-control" value="'.str_replace('<br/>',' ',$this->receiving_address->printAddress()).'">
 					<input name="id_receiving_address" type="hidden" class="form-control" value="'.$this->id_receiving_address.'">
 					<button id="addAddress" alt="company" step="receiving_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></a>
@@ -275,7 +284,7 @@
 				');
 				echo('
 				<div class="form-group">
-					<label for="id_group_company">Type of company</label>
+					<label for="id_group_company">'.$this->tf->getText(85).'</label>
 					<select name="id_group_company" class="form-control">
 					');
 						foreach($groups as $group){
@@ -294,7 +303,7 @@
 					<input name="ust_id" type="text" class="form-control" value="'.$this->ust_id.'">
 				</div>
 				<div class="form-group">
-					<label for="normal_billing_period">Normal Billing Period (in day)</label>
+					<label for="normal_billing_period">'.$this->tf->getText(86).'</label>
 					<input name="normal_billing_period" type="text" class="form-control" value="'.$this->normal_billing_period.'">
 				</div>
 			');

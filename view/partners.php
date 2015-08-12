@@ -10,10 +10,14 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<a href="viewAddPartner.php"><button class="btn btn-success">Add a Partner</button></a>
-			<?php 
-				echo('<table class="table table-stripped">');
-				echo('<tr><th>Country</th><th>Ref</th><th>Modify</th></tr>');
+			<a href="viewAddPartner.php"><button class="btn btn-success"><?php echo($tf->getText(27).' '.$tf->getText(40));?></button></a>
+			<table class="table table-stripped">
+				<tr>
+					<th><?php echo($tf->getText(84));?></th>
+					<th><?php echo($tf->getText(59));?></th>
+					<th><?php echo($tf->getText(20));?></th>
+				</tr>
+			<?php 	
 				foreach($partners as $partner){
 					$partner->printTR();
 				}

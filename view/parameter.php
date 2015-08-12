@@ -12,15 +12,15 @@
 			<?php include('../view/header.php'); ?>
 			<?php
 				if(isset($error)){
-					echo('Rien à afficher');
+					echo($tf->getText(18));
 				} else {
-					echo('<h2>You\'re going to modify : '.$parameter->getName().'</h2>');
+					echo('<h2>'.$tf->getText(19).' : '.$parameter->getName().'</h2>');
 					echo('<form method="get" action="setParameter.php">');
 					$parameter->printToModify('viewParameters.php');
-					echo('<button class="btn btn-primary" type="submit">Modify</button>
+					echo('<button class="btn btn-primary" type="submit">'.$tf->getText(20).'</button>
 					</form>');
-					echo('<h2>Deleting a product is irreversible</h2>');
-					echo('<a href="eraseParameter.php?id='.$parameter->getId().'""><button class="btn btn-danger">Delete</button></a>');
+					echo('<h2>'.$tf->getText(29).'</h2>');
+					echo('<a href="eraseParameter.php?id='.$parameter->getId().'""><button class="btn btn-danger">'.$tf->getText(22).'</button></a>');
 				}
 			?>
 		</div>

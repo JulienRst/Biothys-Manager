@@ -9,6 +9,8 @@
 		if($employee == NULL){
 			$error;
 		}
+		$extraction = new extraction();
+		$orders = $extraction->getOrderFromEmployee($_GET["id"]);
 	} else {
 		$error;
 	}

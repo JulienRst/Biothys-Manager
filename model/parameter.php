@@ -103,15 +103,15 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="ref">Ref</label>
+					<label for="ref">'.$this->tf->getText(59).'</label>
 					<input name="ref" type="number" class="form-control" value="'.$this->ref.'">
 				</div>
 				<div class="form-group">
-					<label for="type">Type</label>
+					<label for="type">'.$this->tf->getText(28).'</label>
 					<input name="type" type="number" class="form-control" value="'.$this->type.'">
 				</div>
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 			');

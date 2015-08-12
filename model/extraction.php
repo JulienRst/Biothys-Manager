@@ -5,6 +5,7 @@
 	require_once('product.php');
 	require_once('parameter.php');
 	require_once('partner.php');
+	require_once('order.php');
 
 	class extraction {
 
@@ -58,6 +59,63 @@
 			}
 
 			return $result_group;
+		}
+
+		public function getOrderFromCompany($id_c){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id_company = :id ORDER BY date_entry DESC LIMIT 5");
+			$stmt->bindParam(':id',$id_c);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("<h2>Problem at ".$e->getLine()." from model Extraction :".$e->getMessage().'</h2>');
+			}
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$orders = array();
+			foreach($result as $order){
+				$norder = new order($order["id"]);
+				array_push($orders,$norder);
+			}
+
+			return $orders;
+		}
+
+		public function getOrderFromEmployee($id_e){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id_employee = :id ORDER BY date_entry DESC LIMIT 5");
+			$stmt->bindParam(':id',$id_e);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("<h2>Problem at ".$e->getLine()." from model Extraction :".$e->getMessage().'</h2>');
+			}
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$orders = array();
+			foreach($result as $order){
+				$norder = new order($order["id"]);
+				array_push($orders,$norder);
+			}
+
+			return $orders;
+		}
+
+		public function getOrdersFromEmployeeWithDate($id_e,$deb,$end){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id_employee = :id ORDER BY date_entry DESC LIMIT 5");
+			$stmt->bindParam(':id',$id_e);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("<h2>Problem at ".$e->getLine()." from model Extraction :".$e->getMessage().'</h2>');
+			}
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$orders = array();
+			foreach($result as $order){
+				$norder = new order($order["id"]);
+				array_push($orders,$norder);
+			}
+
+			return $orders;
 		}
 
 		public function getParametersFromType($id_type){
@@ -395,12 +453,17 @@
 
 		}
 
-		public function getOrders($id = NULL){
-			if($id){
-				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id= :id");
-				$stmt->bindParam(':id',$id);
-			} else {
-				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` as o");
+		public function getOrders($display){
+			if($display == "all"){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` ORDER BY date_entry DESC");
+			} else if($display == "toprepare"){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE ready = 'no' ORDER BY date_entry DESC");
+			} else if($display == "toInvoice"){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE ready = 'yes' and date_receipt = 0 ORDER BY date_entry DESC");
+			} else if($display == "toGetPaid"){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE ready = 'yes' and date_receipt != 0 and finish = 'no' ORDER BY date_entry DESC");
+			} else if($display == "finished"){
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE finish = 'yes' ORDER BY date_entry DESC");
 			}
 			try {
 				$stmt->execute();

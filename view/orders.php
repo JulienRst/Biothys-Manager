@@ -10,11 +10,46 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<h2>List of orders</h2>
-			<a href="viewAddOrder.php"><button class="btn btn-success">Add Order</button></a>
+			<h2><?php echo($tf->getText(26).' '.$tf->getText(14));?></h2>
+			<a href="viewAddOrder.php"><button class="btn btn-success"><?php echo($tf->getText(30).' '.$tf->getText(14));?></button></a>
+			<br/>
+			<br/>
+			<br/>
+			<form method="get" action="viewOrders.php">
+				<div class="inline">
+					<label for="display">Display</label>
+					<select class="form-control short" name="display">
+					<?php
+						$tab = array('all' => 'All','toprepare' => 'To Prepare','toInvoice' => 'To Invoice','toGetPaid' =>'To get Paid','finished' => 'Finish');
+						foreach($tab as $key => $value){
+							if($key == $display){
+								echo('<option value="'.$key.'" selected>'.$value.'</option>');
+							} else {
+								echo('<option value="'.$key.'">'.$value.'</option>');
+							}
+						}
+					
+					?>
+					</select>
+					<input type="submit" class="btn btn-success" value="Ok">
+				</div>
+			</form>
+			<br/>
+			<table class="table table-stripped">
+				<tr>
+					<th>Id</th>
+					<th><?php echo($tf->getText(31));?></th>
+					<th><?php echo($tf->getText(33));?></th>
+					<th><?php echo($tf->getText(47));?></th>
+					<th><?php echo($tf->getText(37));?></th>
+					<th><?php echo($tf->getText(38));?></th>
+					<th><?php echo($tf->getText(39));?></th>
+					<th><?php echo($tf->getText(82));?></th>
+					<th><?php echo($tf->getText(81));?></th>
+					<th><?php echo($tf->getText(83));?></th>
+					<th><?php echo($tf->getText(20));?></th>
+				</tr>
 			<?php 
-				echo('<table class="table table-stripped">');
-				echo('<tr><th>Id</th><th>Company</th><th>Employee</th><th>Delivery Address</th><th>Billing Period</th><th>Date issuing</th><th>Date received</th><th>Date shipment</th><th>Date entry</th><th>Date Billing</th><th>Modify</th>');
 				foreach($orders as $order){
 					$order->printTR();
 				}

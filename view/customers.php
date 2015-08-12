@@ -10,12 +10,19 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<h2>Customers</h2>
-			<a href="viewAddCustomer.php"><button class="btn btn-success">Add Customers</button></a>
+			<h2><?php echo($tf->getText(12));?></h2>
+			<a href="viewAddCustomer.php"><button class="btn btn-success"><?php echo($tf->getText(27).' '.$tf->getText(32));?></button></a>
 			<?php 
 				echo('<table class="table table-stripped">');
 			?>
-				<tr><th>Name</th><th>Company</th><th>Nationality</th><th>Mail</th><th>Phone number</th><th>Modify</th></tr>
+				<tr>
+					<th><?php echo($tf->getText(25));?></th>
+					<th><?php echo($tf->getText(31));?></th>
+					<th><?php echo($tf->getText(50));?></th>
+					<th><?php echo($tf->getText(51));?></th>
+					<th><?php echo($tf->getText(45));?></th>
+					<th><?php echo($tf->getText(20));?></th>
+				</tr>
 			<?php
 				foreach($customers as $customer){
 					$customer->printTR();

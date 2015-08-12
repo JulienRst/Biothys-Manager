@@ -10,8 +10,8 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<h2>List of parameters</h2>
-			<a href="viewAddParameter.php"><button class="btn btn-success">Add parameters</button></a>
+			<h2><?php echo($tf->getText(26).' '.$tf->getText(9)); ?></h2>
+			<a href="viewAddParameter.php"><button class="btn btn-success"><?php echo($tf->getText(27).' '.$tf->getText(9)); ?></button></a>
 			<?php 
 				echo('<table class="table table-stripped">');
 				echo('<tr><th>Ref</th><th>Type</th><th>Name</th><th>Modifier</th>');

@@ -85,3 +85,12 @@ body {
 .inline *{
 	display: inline-block;
 }
+
+.block * {
+	display: block;
+}
+
+.sub-drop {
+	display:none;
+	overflow: hidden;
+}

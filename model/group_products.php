@@ -2,6 +2,7 @@
 
 	require_once('database.php');
 	require_once('extraction.php');
+	require_once('../controller/getText.php');
 
 	class group_products {
 
@@ -22,6 +23,7 @@
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();
+				$this->tf = new textFinder();
 			}
 		}
 
@@ -103,11 +105,11 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 				<div class="form-group">
-					<label for="type">Type</label>
+					<label for="type">'.$this->tf->getText(28).'</label>
 					<input name="type" type="text" class="form-control" value="'.$this->type.'">
 				</div>
 			');

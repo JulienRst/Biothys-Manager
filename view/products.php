@@ -10,7 +10,7 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<a href="viewAddProduct.php"><button class="btn btn-success">Add Product</button></a>
+			<a href="viewAddProduct.php"><button class="btn btn-success"><?php echo($tf->getText(17));?></button></a>
 			<?php 
 				foreach($groups as $group){
 					echo('<h2>'.$group->getName().'</h2>');

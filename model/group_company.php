@@ -106,11 +106,11 @@
 				<input type="hidden" name="class" value="group_company">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="ref">Ref</label>
+					<label for="ref">'.$this->tf->getText(59).'</label>
 					<input name="ref" type="text" class="form-control" value="'.$this->ref.'">
 				</div>
 				<div class="form-group">
-					<label for="name">Designation</label>
+					<label for="name">'.$this->tf->getText(58).'</label>
 					<input name="designation" type="text" class="form-control" value="'.$this->designation.'">
 				</div>
 			');

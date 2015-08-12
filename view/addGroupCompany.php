@@ -11,12 +11,12 @@
 		<div class="container">
 			<?php include('../view/header.php'); ?>
 			
-			<h2>Add a new group company</h2>
+			<h2><?php echo($tf->getText(27).' '.$tf->getText(10));?></h2>
 
 			<?php
 				echo('<form method="get" action="addClass.php">');
 				$gc->printToModify("viewGroupCompanies.php");
-				echo('<button class="btn btn-success" type="submit">Add Group Company</button>
+				echo('<button class="btn btn-success" type="submit">'.$tf->getText(27).' '.$tf->getText(10).'</button>
 				</form>');
 			?>
 		</div>

@@ -11,19 +11,19 @@
 		<div class="container">
 			<?php include('../view/header.php'); ?>
 			
-			<h2>Modify Group Product : <?php echo($groupProduct->getName()); ?></h2>
+			<h2><?php echo($tf->getText(20));?> : <?php echo($groupProduct->getName()); ?></h2>
 			<form method="get" action="setGroupProduct.php">
 				<?php
 
 					$groupProduct->printToModify("viewGroupProducts.php");
 
 				?>
-				<button type="submit" class="btn btn-success">Set the group</button>
+				<button type="submit" class="btn btn-success"><?php echo($tf->getText(48));?> <?php echo($tf->getText(34));?></button>
 			</form>
-			<h2>Delete Group (irreversible)</h2>
+			<h2><?php echo($tf->getText(61));?></h2>
 			<?php
 
-				echo('<a href="deleteGroupProduct.php?id='.$groupProduct->getId().'"><button class="btn btn-danger">Delete the group</button></a>');
+				echo('<a href="deleteGroupProduct.php?id='.$groupProduct->getId().'"><button class="btn btn-danger">'.$tf->getText(22).'</button></a>');
 
 			?>
 		</div>

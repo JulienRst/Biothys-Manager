@@ -21,7 +21,7 @@
 		public function __construct($id = 0){
 
 			$this->pdo = database::getInstance();
-
+			$this->tf = new textFinder();
 			$this->id = $id;
 			$this->name = '';
 			$this->description = '';
@@ -124,19 +124,19 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="ref">Ref</label>
+					<label for="ref">'.$this->tf->getText(59).'</label>
 					<input name="ref" type="number" class="form-control" value="'.$this->ref.'">
 				</div>
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="'.$this->name.'">
 				</div>
 				<div class="form-group">
-					<label for="description">Description</label>
+					<label for="description">'.$this->tf->getText(42).'</label>
 					<input name="description" type="text" class="form-control" value="'.$this->description.'">
 				</div>
 				<div class="form-group">
-					<label for="id_group">Group</label>
+					<label for="id_group">'.$this->tf->getText(34).'</label>
 					<select name="id_group" class="form-control">
 					');
 						foreach($groups as $group){
@@ -150,15 +150,15 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="description">Unit</label>
+					<label for="description">'.$this->tf->getText(89).'</label>
 					<input name="unit" type="text" class="form-control" value="'.$this->unit.'">
 				</div>
 				<div class="form-group">
-					<label for="description">Cost</label>
+					<label for="description">'.$this->tf->getText(90).'</label>
 					<input name="cost" type="text" class="form-control" value="'.$this->cost.'">
 				</div>
 				<div class="form-group">
-					<label for="description">Price</label>
+					<label for="description">'.$this->tf->getText(75).'</label>
 					<input name="price" type="text" class="form-control" value="'.$this->price.'">
 				</div>
 				');

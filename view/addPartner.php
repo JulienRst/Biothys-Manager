@@ -10,12 +10,12 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<h2>Add a new partner</h2>
+			<h2><?php echo($tf->getText(27).' '.$tf->getText(40)); ?></h2>
 			<form method="get" action="addClass.php">
 				<input name="next" type="hidden" value="viewPartners.php">
 				<input name="class" type="hidden" value="partner">
 				<?php $partner->printToModify("viewPartners.php"); ?>
-				<button class="btn btn-success" type="submit">Add Partner</button>
+				<button class="btn btn-success" type="submit"><?php echo($tf->getText(27).' '.$tf->getText(40)); ?></button>
 			</form>
 		</div>
 

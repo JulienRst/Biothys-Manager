@@ -1,9 +1,53 @@
 $(document).ready(function(){
-
 	$('.datepicker').datepicker({
 		defaultDate : null
 	});
 
+	$('.drop').click(function(){
+		var target = $(this).attr('rel');
+		var owned;
+		for(var i in $('.sub-drop')){
+			if($('.sub-drop:eq('+i+')').attr('alt') == target){
+				owned = $('.sub-drop:eq('+i+')');
+				break;
+			}
+		}
+		if(owned.css('display') == "block"){
+			$(this).removeClass('glyphicon-menu-up');
+			$(this).addClass('glyphicon-menu-down');
+			owned.css('display','none');
+		} else {
+			$(this).removeClass('glyphicon-menu-down');
+			$(this).addClass('glyphicon-menu-up');
+			owned.css('display','block');
+		}
+		
+	});
+
+	$('#searchCompany').on('input',function(){
+		var input = $(this).val().toLowerCase();
+		$('tr').css('display','table-row');
+		for(var i in $('tr')){
+			if(i > 0){
+				var needle = $('tr:eq('+i+') td:eq(0)').html();
+				needle = needle.toLowerCase();
+				if(needle.indexOf(input) == -1){
+					$('tr:eq('+i+')').css('display','none');
+				}
+			}
+			
+		}
+	});
+
+	$('.setAlready_paid').click(function(){
+		var id = $(this).attr('rel');
+		$.ajax({
+			url: "setAlready_paidOrder.php?id="+id+"&val="+$('input[name="already_paid"]').val(),
+			success: function(){
+				$('#resultAlreadyPaid').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Save</div>')
+			}
+		})
+	});
 
 	$('.sendLineMore').click(function(){
 		var id = $(this).attr('rel');
@@ -22,6 +66,16 @@ $(document).ready(function(){
 			$.ajax({url: "setOrderReady.php?id="+id+"&val=yes"});
 		} else {
 			$.ajax({url: "setOrderReady.php?id="+id+"&val=no"});
+		}
+	});
+
+	$('input[name="finish"]').on('change',function(){
+		var id = $(this).attr('rel');
+		var nval = $(this).is(':checked');
+		if(nval){
+			$.ajax({url: "setOrderFinish.php?id="+id+"&val=yes"});
+		} else {
+			$.ajax({url: "setOrderFinish.php?id="+id+"&val=no"});
 		}
 	});
 

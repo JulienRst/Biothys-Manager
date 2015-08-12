@@ -111,7 +111,7 @@
 			}
 
 			$this->SetFont('Arial','B',10);
-			$this->Cell(167,6,'Sum in euro',1,0,'R');
+			$this->Cell(167,6,'Sum in Euro',1,0,'R');
 			$this->Cell(18,6,$order->getPrice(),1,0,'R');
 			$this->Ln();
 			//TVA
@@ -168,7 +168,7 @@
 	$pdf->Cell(185,21,'',1);
 	$pdf->setX($pdf->GetX() - 185);
 	$pdf->setY($pdf->GetY() + 2);
-	$pdf->FirstTable(array(array(utf8_decode('n° :'),$id_document,date('d.m.y',$order->getDate_entry())),array('UST-ID :',$company->getUst_id(),$order->getEmployee()->getSurname().' '.$order->getEmployee()->getName()),array('Your ID :',$company->getId(),'1/1')));
+	$pdf->FirstTable(array(array(utf8_decode('n° :'),$id_document,date('d.m.y',$order->getDate_entry())),array('UST-ID :',$company->getUst_id(),utf8_decode($order->getEmployee()->getSurname().' '.$order->getEmployee()->getName())),array('Your ID :',$company->getId(),'1/1')));
 	$pdf->SetFont('Arial','',8);
 	$pdf->setY($pdf->GetY() + 2);
 	$pdf->MultiCell(100,3,utf8_decode($text_intro));

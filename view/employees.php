@@ -10,10 +10,20 @@
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			<a href="viewAddEmployee.php"><button class="btn btn-success">Add Employee</button></a>
+			<a href="viewAddEmployee.php"><button class="btn btn-success"><?php echo($tf->getText(27).' '.$tf->getText(33));?></button></a>
+			<table class="table table-stripped">
+				<tr>
+					<th><?php echo($tf->getText(25));?></th>
+					<th><?php echo($tf->getText(53));?></th>
+					<th><?php echo($tf->getText(51));?></th>
+					<th><?php echo($tf->getText(54));?></th>
+					<th><?php echo($tf->getText(45));?></th>
+					<th><?php echo($tf->getText(55));?></th>
+					<th><?php echo($tf->getText(56));?></th>
+					<th><?php echo($tf->getText(57));?></th>
+					<th><?php echo($tf->getText(20));?></th>
+				</tr>
 			<?php 
-				echo('<table class="table table-stripped">');
-				echo('<tr><th>Name</th><th>Surname</th><th>Mail</th><th>Short phone</th><th>Phone number</th><th>id_address</th><th>Birthdate</th><th>Right group</th><th>Modify</th></tr>');
 				foreach($employees as $employee){
 					$employee->printTR();
 				}

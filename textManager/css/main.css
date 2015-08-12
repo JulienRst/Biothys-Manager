@@ -1,0 +1,20 @@
+#popup, #popupadd {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.75);
+	top: 0;
+	right: 0;
+	display: none;
+}
+
+#popup .container,#popupadd .container {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#popup .container .jumbotron, #popupadd .container .jumbotron {
+	width: 960px;
+	margin: auto;
+}

@@ -25,6 +25,7 @@
 
 		public function __construct($id = 0){
 			$this->pdo = database::getInstance();
+			$this->tf = new textFinder();
 			$this->id_address = -1;
 			if($id != 0){
 				$this->id = $id;
@@ -181,27 +182,27 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="name">Name</label>
-					<input name="name" type="text" class="form-control" value="'.$this->name.'">
+					<label for="name">'.$this->tf->getText(25).'</label>
+					<input name="name" type="text" class="form-control" value="'.ucwords($this->name).'">
 				</div>
 				<div class="form-group">
-					<label for="surname">Surname</label>
-					<input name="surname" type="text" class="form-control" value="'.$this->surname.'">
+					<label for="surname">'.$this->tf->getText(53).'</label>
+					<input name="surname" type="text" class="form-control" value="'.ucwords($this->surname).'">
 				</div>
 				<div class="form-group">
-					<label for="mail">Mail</label>
+					<label for="mail">'.$this->tf->getText(51).'</label>
 					<input name="mail" type="text" class="form-control" value="'.$this->mail.'">
 				</div>
 				<div class="form-group">
-					<label for="short_phone">Short phone</label>
+					<label for="short_phone">'.$this->tf->getText(54).'</label>
 					<input name="short_phone" type="number" class="form-control" value="'.$this->short_phone.'">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">Phone number</label>
+					<label for="phone_number">'.$this->tf->getText(45).'</label>
 					<input name="phone_number" type="text" class="form-control" value="'.$this->phone_number.'">
 				</div>
 				<div class="form-group">
-					<label for="address">Address (add or set the address with the button bellow not the textarea)</label>
+					<label for="address">'.$this->tf->getText(44).' '.$this->tf->getText(69).'</label>
 					<input type="text" id="address" class="form-control" value="'.str_replace('<br/>',' ',$this->address->printAddress()).'">
 					<input name="id_address" type="hidden" class="form-control" value="'.$this->id_address.'">
 					<button id="addAddress" alt="employee" step="address" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-plus\' aria-hidden=\'true\'></span></button></a>
@@ -209,7 +210,7 @@
 					<button id="getAddress" alt="employee" step="address" rel="'.$this->id.'" class=\'display btn btn-primary\'><span class=\'glyphicon glyphicon-search\' aria-hidden=\'true\'></span></button></a>
 				</div>
 				<div class="form-group">
-					<label for="right_group">Right Group</label>
+					<label for="right_group">'.$this->tf->getText(57).'</label>
 					<select name="right_group" class="form-control">
 					');
 						foreach($groups as $group){
@@ -223,7 +224,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="birthdate">Birthdate</label>
+					<label for="birthdate">'.$this->tf->getText(56).'</label>
 					<input name="birthdate" type="date" class="form-control" value="'.date('Y-m-d',$this->birthdate).'">
 				</div>
 				');
@@ -236,27 +237,27 @@
 				<input type="hidden" name="id" value="'.$this->id.'">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
-					<label for="name">Name</label>
+					<label for="name">'.$this->tf->getText(25).'</label>
 					<input name="name" type="text" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="surname">Surname</label>
+					<label for="surname">'.$this->tf->getText(53).'</label>
 					<input name="surname" type="text" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="mail">Mail</label>
+					<label for="mail">'.$this->tf->getText(51).'</label>
 					<input name="mail" type="text" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="short_phone">Short phone</label>
+					<label for="short_phone">'.$this->tf->getText(54).'</label>
 					<input name="short_phone" type="number" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">Phone number</label>
+					<label for="phone_number">'.$this->tf->getText(45).'</label>
 					<input name="phone_number" type="text" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="right_group">Right Group</label>
+					<label for="right_group">'.$this->tf->getText(57).'</label>
 					<select name="right_group" class="form-control">
 					');
 						$a = 0;
@@ -273,15 +274,15 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="birthdate">Birthdate</label>
+					<label for="birthdate">'.$this->tf->getText(56).'</label>
 					<input name="birthdate" type="date" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="login">Login</label>
+					<label for="login">'.$this->tf->getText(3).'</label>
 					<input name="login" type="text" class="form-control" value="">
 				</div>
 				<div class="form-group">
-					<label for="password">Password</label>
+					<label for="password">'.$this->tf->getText(4).'</label>
 					<input name="password" type="password" class="form-control" value="">
 				</div>
 			');
