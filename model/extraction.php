@@ -15,6 +15,65 @@
 			$this->pdo = database::getInstance();
 		}
 
+		public function getOrdersToGetPaid(){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE order.finish = 'no'");
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$results = array();
+
+			foreach($orders as $line){
+				$order = new order($line["id"]);
+				if($order->getAlready_paid() < $order->getPrice()){
+					array_push($results,$order);
+				}
+			}
+
+			return $results;
+
+		}
+
+		public function getProductsFromOrders($deb_a,$end_a){
+
+			$deb = DateTime::createFromFormat('d-m-y',$deb_a)->getTimestamp();
+			$end = DateTime::createFromFormat('d-m-y',$end_a)->getTimestamp();
+
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT lop.amount, lop.price_bis, gp.name as gpname,c.nationality as cnationality, o.date_receipt as dr, p.name as pname FROM company as c, `order` as o, product as p, link_order_product as lop, group_product as gp WHERE o.id_company = c.id and o.date_receipt > :deb and o.date_receipt < :end and p.id_group = gp.id and lop.id_product = p.id and lop.id_order = o.id");
+			$stmt->bindParam(':deb',$deb);
+			$stmt->bindParam(':end',$end);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			//group_product["group"]["country"]["name"]["date"]{["quantity"]["pricetotal"]}
+
+			$resulting = array();
+
+			foreach($result as $line){
+				$date = date('m',$line["dr"]).'/'.date('y',$line["dr"]);
+				if(!isset($resulting[$line["gpname"]][$line["cnationality"]][$date][$line["pname"]])){
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["quantity"] = $line["amount"]; 
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["price"] = $line["price_bis"]; 
+				} else {
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["quantity"] += $line["amount"]; 
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["price"] += $line["price_bis"]; 
+				}
+			}
+
+			return $resulting;
+
+		}
+
 		public function getProductByGroup($id = NULL){
 			if($id){
 				$stmt = $this->pdo->PDOInstance->prepare("SELECT * FROM product as p WHERE p.id_group = :id");
@@ -102,6 +161,34 @@
 		public function getOrdersFromEmployeeWithDate($id_e,$deb,$end){
 			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE id_employee = :id ORDER BY date_entry DESC LIMIT 5");
 			$stmt->bindParam(':id',$id_e);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("<h2>Problem at ".$e->getLine()." from model Extraction :".$e->getMessage().'</h2>');
+			}
+			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$orders = array();
+			foreach($result as $order){
+				$norder = new order($order["id"]);
+				array_push($orders,$norder);
+			}
+
+			return $orders;
+		}
+
+		public function getOrdersWithDate($deb,$end){
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE date_receipt > :deb AND date_receipt < :end ORDER BY date_entry");
+			
+			// $date_shipment = DateTime::createFromFormat('!d-m-y', $_GET['date_shipment'])->getTimestamp();
+			// $date_receipt = DateTime::createFromFormat('!d-m-y', $_GET['date_receipt'])->getTimestamp();
+
+
+			$deb = DateTime::createFromFormat('d-m-y',$deb)->getTimestamp();
+			$end = DateTime::createFromFormat('d-m-y',$end)->getTimestamp();
+			
+			$stmt->bindParam(':deb',$deb);
+			$stmt->bindParam(':end',$end);
 
 			try {
 				$stmt->execute();

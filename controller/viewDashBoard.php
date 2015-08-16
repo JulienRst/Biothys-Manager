@@ -22,6 +22,31 @@
 
 		$ca = number_format($ca,2,',',' ');
 
+		//On regroupe les commandes par leur client
+		$companies = array();
+
+		function search($id,$company){
+			$mag = false;
+			foreach($company as $i => $item){
+				if($item->getId() == $id){
+					$mag = $i;
+				}
+			}
+			return $mag;
+		}
+
+		foreach($orders as $order){
+			$tag = search($order->getId_company(),$companies);
+			if($tag !== false){
+				$companies[$tag]->addOrder($order);
+			} else {
+				$new_company = new company($order->getId_company());
+				$new_company->addOrder($order);
+				array_push($companies,$new_company);
+			}
+		}
+
+
 	} else {
 		$display = false;
 	}

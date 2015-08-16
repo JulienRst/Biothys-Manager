@@ -33,6 +33,10 @@
 			}
 		}
 
+		public function printLink(){
+			return '<a href="../controller/viewEmployee.php?id='.$this->id.'">'.ucwords($this->name.' '.$this->surname).'</a>';
+		}
+
 		public function __autoload($class_name) {
 		    include '../model/'.$class_name . '.php';
 		}

@@ -3,6 +3,21 @@ $(document).ready(function(){
 		defaultDate : null
 	});
 
+	$('.monitoring li').click(function(){
+		var target = $(this).attr('role');
+		var owned;
+		for(var i in $('.subpanel')){
+			if($('.subpanel:eq('+i+')').attr('rel') == target){
+				owned = $('.subpanel:eq('+i+')');
+				break;
+			}
+		}
+		$('.subpanel.active').removeClass('active');
+		owned.addClass('active');
+		$('.monitoring li.active').removeClass('active');
+		$(this).addClass('active');
+	});
+
 	$('.drop').click(function(){
 		var target = $(this).attr('rel');
 		var owned;

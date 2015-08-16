@@ -27,29 +27,49 @@
 			<?php 
 				if($display){
 			?>
-				<div class="dropdown-primo">
-					Vous avez fais <?php echo($count); ?> commandes pour un Chiffre d'Affaire de <?php echo($ca);?> €
-					<span rel="dropdown-secondo" class="drop glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-					<div class="sub-drop" alt="dropdown-secondo">
-						<div>
-							<div class="dropdown-primo">
-								Client 1
-								<span rel="dropdown-tercio" class="drop glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-								<div class="sub-drop" alt="dropdown-tercio">
-									<div>
-										Facture 1
-									</div>
-									<div>
-										Facture 2
-									</div>
+
+				<div class="panel panel-primary">
+	 				<div class="panel-heading">Résumé :</div>
+	  				<div class="panel-body">
+	    				<div class="dropdown-primo">
+							Vous avez fais <?php echo($count); ?> commandes pour un Chiffre d'Affaire de <?php echo($ca);?> €
+							<span rel="dropdown-secondo" class="drop glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+							<div class="sub-drop" alt="dropdown-secondo">
+								<div>
+									<?php 
+										foreach($companies as $company){
+									?>
+											<div class="dropdown-primo well">
+												<?php echo($company->getName());?> : <?php echo(count($company->getOrders())); ?> commandes dont 
+												<?php echo(number_format($company->getAlready_paid(),2,',',' ').'/'.number_format($company->getCa(),2,',',' ')); ?> € payé
+												<span rel="dropdown-tercio" class="drop glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+												<div class="sub-drop" alt="dropdown-tercio">
+												<?php 
+
+													foreach($company->getOrders() as $order){
+														echo('<div class="well">');
+
+														echo('Réf : '.$order->getRef().' || Payé : '.number_format($order->getAlready_paid(),2,',',' ').'/'.number_format($order->getPrice(),2,',',' ').'€ ');
+														echo('<a href="viewOrder.php?id='.$order->getId().'"><button class="btn btn-primary"><span  class="glyphicon glyphicon-wrench" aria-hidden="true"></button></a>');
+
+														echo('</div>');
+													}
+
+												?>
+												</div>
+											</div>
+
+									<?php	
+										}
+									?>
+									
 								</div>
 							</div>
 						</div>
-						<div>
-							Client 2
-						</div>
-					</div>
+	  				</div>
 				</div>
+
+				
 			<?php
 				}
 			?>

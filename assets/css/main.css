@@ -13,6 +13,10 @@ body {
 	width: 300px;
 }
 
+.nav.monitoring {
+	width: inherit;
+}
+
 .container {
 	width: calc(100% - 300px);
 	margin-bottom: 20px;
@@ -93,4 +97,12 @@ body {
 .sub-drop {
 	display:none;
 	overflow: hidden;
+}
+
+.subpanel {
+	display: none;
+}
+
+.subpanel.active {
+	display: block;
 }

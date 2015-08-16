@@ -2,9 +2,8 @@
 
 	require_once('../model/order.php');
 
-	$date_shipment = (string)strtotime($_GET['date_shipment']);
-	$date_receipt = (string)strtotime($_GET['date_receipt']);
-
+	$date_shipment = DateTime::createFromFormat('!d-m-y', $_GET['date_shipment'])->getTimestamp();
+	$date_receipt = DateTime::createFromFormat('!d-m-y', $_GET['date_receipt'])->getTimestamp();
 
 	$order = new order($_GET['id']);
 

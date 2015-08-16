@@ -25,8 +25,15 @@
 		private $normal_billing_period;
 		private $ust_id;
 		private $phone_number;
-
 		private $delivery_addresses;
+
+		//DashBoard Only
+		public $orders;
+		public $alreadyPaid;
+		public $ca;
+		public $ordersMonth;
+
+		
 
 		private $pdo;
 
@@ -40,9 +47,27 @@
 			$this->receiving_address = new address();
 			$this->billing_address = new address();
 			$this->tf = new textFinder();
+			$this->orders = array();
+			$this->ordersMonth = array();
+			$this->alreadyPaid = 0;
+			$this->ca = 0;
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();
+			}
+		}
+
+		public function addOrder($order){
+			array_push($this->orders,$order);
+			$this->ca += $order->getPrice();
+			$this->alreadyPaid += $order->getAlready_paid();
+		}
+
+		public function addOrderMonth($date,$order){
+			if(array_key_exists($date,$this->ordersMonth)){
+				$this->ordersMonth[$date] += $order->getPrice();
+			} else {
+				$this->ordersMonth[$date] = $order->getPrice();
 			}
 		}
 
@@ -326,6 +351,11 @@
 		public function getContac(){return $this->contact;}
 		public function getDelivery_addresses(){return $this->delivery_addresses;}
 		public function getReceiving_address(){return $this->receiving_address;}
+
+		public function getOrders(){return $this->orders;}
+		public function getOrdersMonth(){return $this->ordersMonth;}
+		public function getAlready_paid(){return $this->alreadyPaid;}
+		public function getCa(){return $this->ca;}
 
 		public function setId($new){$this->id = $new;}
 		public function setId_group_company($new){$this->id_group_company = $new;}

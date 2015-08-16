@@ -4,6 +4,7 @@
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/datepicker.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
 	<body> 
@@ -105,11 +106,11 @@
 				<input type="hidden" name="id" value="<?php echo($order->getId()); ?>">
 				<div class="form-group">
 					<label for="date_shipment"><?php echo($tf->getText(81));?></label>
-					<input name="date_shipment" class="datepicker form-control short form-date" type="text" value="<?php echo(date('d/m/y',$order->getDate_shipment()));?>">
+					<input name="date_shipment" class="datepicker form-control short form-date" type="text" data-date-format="dd-mm-yy" value="<?php if($order->getDate_shipment() != 0){ echo(date('d-m-y',$order->getDate_shipment()));}?>">
 				</div>
 				<div class="form-group">
 					<label for="date_receipt"><?php echo($tf->getText(83));?></label>
-					<input name="date_receipt" class="datepicker form-control short form-date" type="text" value="<?php echo(date('d/m/y',$order->getDate_receipt()));?>">
+					<input name="date_receipt" class="datepicker form-control short form-date" type="text" data-date-format="dd-mm-yy" value="<?php if($order->getDate_receipt() != 0){ echo(date('d-m-y',$order->getDate_receipt()));}?>">
 				</div>
 				<input type="submit" class="btn btn-success" value="<?php echo($tf->getText(20));?>">
 			</form>
