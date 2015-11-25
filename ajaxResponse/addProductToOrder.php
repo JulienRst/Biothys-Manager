@@ -31,6 +31,10 @@
 		<input name="quantity" type="text" class="form-control" value="1">
 	</div>
 	<div class="form-group">
+		<label for="amount_to_be_delivered">Va être livré</label>
+		<input name="amount_to_be_delivered" type="text" class="form-control" value="1">
+	</div>
+	<div class="form-group">
 		<label for="price">Price</label>
 		<input name="price" type="text" class="form-control" value="">
 	</div>

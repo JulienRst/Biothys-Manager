@@ -161,7 +161,7 @@
 				$this->getAddress();
 			}
 			$right_group = new right_group($this->right_group);
-			echo('<tr><td>'.ucwords($this->name).'</td>
+			echo('<tr class="employee"><td>'.ucwords($this->name).'</td>
 			<td>'.ucwords($this->surname).'</td>
 			<td>'.$this->mail.'</td>
 			<td>'.$this->short_phone.'</td>

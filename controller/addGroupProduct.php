@@ -5,6 +5,7 @@
 	$group_products = new group_products();
 	if($_GET["name"] != ""){
 		$group_products->setName($_GET["name"]);
+		$group_products->setType($_GET["type"]);
 		$group_products->addToDatabase();
 	}
 	

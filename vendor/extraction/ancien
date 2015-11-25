@@ -1,0 +1,78 @@
+<?php
+
+	$servername = "127.0.0.1";
+	$dbname = "db320967";
+	$username = "root";
+	$password = "";
+
+	$pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+
+	//Récupérer les produits et leur quantité d'une commande
+
+	/*$stmt = $pdo->query('SELECT kdp.menge, kdp.einheit, ar.kurzbezeichnung FROM kontakte_dokumente_positionen as kdp, artikel as ar WHERE kdp.dokument_id = 4 and kdp.original_artikel_id = ar.id');
+
+	$stmt = $stmt->fetchAll();
+
+	foreach($stmt as $product){
+		echo($product["menge"].' '.$product["einheit"].' | '.$product["kurzbezeichnung"]);
+		echo("<br>");
+	}*/
+
+	//Tri des produits en fonctions de leur type [PAS FINI]
+
+	/*$products = $pdo->prepare('SELECT a.kurzbezeichnung FROM artikel as a WHERE a.gruppe = :group');
+	$groups = $pdo->query('SELECT ag.bezeichnung, ag.id FROM artikel_gruppen as ag');
+
+	$groups = $groups->fetchAll();
+
+	foreach($groups as $group){
+		echo('<h2>'.$group["bezeichnung"].'</h2>');
+		$products->bindParam(':group',$group['id']);
+		$products->execute();
+		$products->fetchAll
+	}*/
+
+	//Extraction des clients par types de clients
+	/*$clients = $pdo->prepare("SELECT k.firma FROM kontakte as k, einstellungen_selectboxen_inhalt as esi WHERE esi.bezeichnung = :lookingFor and esi.id = k.typ");
+	$lookingFor = "Kunde";
+	$clients->bindParam(':lookingFor',$lookingFor);
+	try {
+		$clients->execute();
+	} catch(Exception $e){
+		print_r($e);
+	}
+	$clients = $clients->fetchAll();
+	echo('<h2>Les clients finaux sont : </h2><br><br>');
+	echo('<table>');
+	foreach($clients as $client){
+		echo('<tr><td>'.$client["firma"].'</td></tr>');
+	}
+	echo('</table>');*/
+	$somme = 0;
+	$soussomme = 0;
+
+	$factures = $pdo->query("SELECT k.firma, kd.nummer,kd.datum,kd.id FROM kontakte as k,kontakte_dokumente as kd, einstellungen_dokumente_kontakte as edk WHERE k.id = kd.kontakte_id and kd.typ = edk.id and edk.kurzform = 'RE' and kd.datum like '2014-01-%'");
+	
+	echo("Nombre de facture : ".$factures->rowcount());
+	$factures = $factures->fetchAll();
+	echo("<table><tr><th>Client</th><th>Numero de facture</th><th>Date</th><th>Produit</th><th>Quantite</th><th>Prix unitaire</th><th>Prix total</th><tr>");
+	
+	foreach ($factures as $facture) {
+		$soussomme = 0;
+		$id = $facture['id'];
+		$reqs = $pdo->query("SELECT kdp.menge,kdp.einzelpreis,kdp.beschreibung FROM kontakte_dokumente_positionen as kdp WHERE kdp.dokument_id = ".$id);
+		echo('<tr><td>Id de la facture : '.$id.' | Nombre de produit dans la facture : '.$reqs->rowcount().'</td></tr>');
+		$reqs =	$reqs->fetchAll();
+		foreach($reqs as $req){
+			echo("<tr><td>".$facture['firma']."</td><td>".$facture['nummer']."</td><td>".$facture['datum']."</td><td>".$req['beschreibung']."</td><td>".$req['menge']."</td><td>".$req['einzelpreis']."</td>");
+			echo("<td>".($req["einzelpreis"]*$req["menge"])."</td></tr>");
+			$soussomme += $req["einzelpreis"]*$req["menge"];
+			$somme += $req["einzelpreis"]*$req["menge"];
+		}
+		echo('<tr><td>'.$soussomme.'</td></tr>');
+		
+	}
+
+	echo("</table>");
+	echo('<br><br>Somme finale : '.$somme);
+?>

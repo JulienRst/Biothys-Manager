@@ -18,7 +18,7 @@
 		$country_company = $company->getNationality();
 		$extraction = new extraction();
 		$allPartners = $extraction->get('partner');
-		$id_order = $order->getRef();
+		$id_order = $order->getId();
 		$id_to_print = "";
 		$count = strlen((string) $id_order);
 		for($i=0;$i< 4-($count);$i++){

@@ -3,6 +3,8 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
@@ -33,6 +35,10 @@
 					</select>
 					<input type="submit" class="btn btn-success" value="Ok">
 				</div>
+				<div class="form-group">
+					<label for="search">Search</label>
+					<input id="searchOrder" name="search" class="form-control short"></div>
+				</form>
 			</form>
 			<br/>
 			<table class="table table-stripped">

@@ -43,7 +43,7 @@
 			$deb = DateTime::createFromFormat('d-m-y',$deb_a)->getTimestamp();
 			$end = DateTime::createFromFormat('d-m-y',$end_a)->getTimestamp();
 
-			$stmt = $this->pdo->PDOInstance->prepare("SELECT lop.amount, lop.price_bis, gp.name as gpname,c.nationality as cnationality, o.date_receipt as dr, p.name as pname FROM company as c, `order` as o, product as p, link_order_product as lop, group_product as gp WHERE o.id_company = c.id and o.date_receipt > :deb and o.date_receipt < :end and p.id_group = gp.id and lop.id_product = p.id and lop.id_order = o.id");
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT lop.amount, lop.price_bis, gp.name as gpname,c.nationality as cnationality, o.date_entry as dr, p.name as pname FROM company as c, `order` as o, product as p, link_order_product as lop, group_product as gp WHERE o.id_company = c.id and o.date_entry > :deb and o.date_entry < :end and p.id_group = gp.id and lop.id_product = p.id and lop.id_order = o.id");
 			$stmt->bindParam(':deb',$deb);
 			$stmt->bindParam(':end',$end);
 
@@ -178,7 +178,7 @@
 		}
 
 		public function getOrdersWithDate($deb,$end){
-			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE date_receipt > :deb AND date_receipt < :end ORDER BY date_entry");
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE date_entry > :deb AND date_entry < :end ORDER BY date_entry");
 			
 			// $date_shipment = DateTime::createFromFormat('!d-m-y', $_GET['date_shipment'])->getTimestamp();
 			// $date_receipt = DateTime::createFromFormat('!d-m-y', $_GET['date_receipt'])->getTimestamp();
@@ -419,11 +419,7 @@
 			$result = array();
 
 			foreach ($stmt as $customer) {
-				$customer_ = new customer();
-				foreach($customer as $key => $value){
-					$attribute = "set".ucfirst($key);
-					$customer_->$attribute($value);
-				}
+				$customer_ = new customer($customer["id"]);
 				array_push($result,$customer_);
 			}
 
@@ -450,7 +446,6 @@
 			foreach($stmt as $company){
 				$ncompany = NULL;
 				$ncompany = new company($company["id"]);
-				echo('<br/><br/>');
 				array_push($result, $ncompany);
 			}
 
@@ -489,7 +484,7 @@
 
 		public function getCustomersFromCompany($idCompany){
 			if($idCompany){
-				$stmt = $this->pdo->PDOInstance->prepare("SELECT name,mail,phone_number FROM customer as c WHERE c.id_company = :id");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM customer as c WHERE c.id_company = :id");
 				$stmt->bindParam(':id',$idCompany);
 				try {
 					$stmt->execute();
@@ -502,11 +497,8 @@
 				$result = array();
 
 				foreach ($stmt as $customer) {
-					$customer_ = new customer();
-					foreach($customer as $key => $value){
-						$attribute = "set".ucfirst($key);
-						$customer_->$attribute($value);
-					}
+
+					$customer_ = new customer($customer["id"]);
 					array_push($result,$customer_);
 				}
 
@@ -516,9 +508,9 @@
 
 		public function searchFor($class,$needle){
 			if($class == "employee"){
-				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE name LIKE '%".$needle."%' OR surname LIKE '%".$needle."%' LIMIT 5");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE UPPER(name) LIKE UPPER('%".$needle."%') OR UPPER(surname) LIKE UPPER('%".$needle."%') LIMIT 5");
 			} else {
-				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE name LIKE '%".$needle."%' LIMIT 5");
+				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE UPPER(name) LIKE UPPER('%".$needle."%' )LIMIT 5");
 			}
 			
 			try {

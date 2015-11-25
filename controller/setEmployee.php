@@ -17,7 +17,6 @@
 			}
 		}
 	}
-	print_r($employee);
 	$employee->setToDatabase();
 
 	header('location:'.$_GET['next']);

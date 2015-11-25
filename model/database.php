@@ -54,6 +54,7 @@
 		* @var string
 		*/
 		const DEFAULT_SQL_USER = 'root';
+		// const DEFAULT_SQL_USER = 'biothysmibgeldor';
 
 		/**
 		* Constante: hôte de la bdd
@@ -61,6 +62,7 @@
 		* @var string
 		*/
 		const DEFAULT_SQL_HOST = 'localhost';
+		// const DEFAULT_SQL_HOST = 'biothysmibgeldor.mysql.db';
 
 		/**
 		* Constante: hôte de la bdd
@@ -68,13 +70,15 @@
 		* @var string
 		*/
 		const DEFAULT_SQL_PASS = '';
+		// const DEFAULT_SQL_PASS = 'Biothys77';
 
 		/**
 		* Constante: nom de la bdd
 		*
 		* @var string
 		*/
-		const DEFAULT_SQL_DTB = 'biothys';
+		//const DEFAULT_SQL_DTB = 'biothysmibgeldor';
+		const DEFAULT_SQL_DTB = 'julienroqalpha';
 
 		/**
 		* Constructeur

@@ -5,7 +5,7 @@
 
 	$extraction = new extraction();
 
-	$needle = strtolower($_GET["needle"]);
+	$needle = $_GET["needle"];
 
 	$results = $extraction->searchFor($_GET["class"],$needle);
 

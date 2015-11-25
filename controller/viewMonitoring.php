@@ -35,7 +35,6 @@
 	//Calcul of the period if set
 
 	if(isset($_GET["dateDeb"]) && $_GET["dateDeb"] != "" && isset($_GET["dateEnd"]) && $_GET["dateEnd"] != ""){
-		echo('<h2>');
 
 		//Check if the period is in the new or the old Biothys
 		$dateMigration = "15-08-15";
@@ -53,7 +52,7 @@
 
 		if($startDate < $tsdateMigration){
 			$displayOld = true;
-			$json = file_get_contents('http://127.0.0.1/extraction/controller/getInvoiceMonth.php?dateDeb='.$deb.'&dateEnd='.$dateMigration,'true');
+			$json = file_get_contents('https://biothys-office.com/new/vendor/extraction/controller/getInvoiceMonth.php?dateDeb='.$deb.'&dateEnd='.$dateMigration,'true');
 			$ancientInvoice = json_decode($json,'true');
 		}
 
@@ -116,7 +115,6 @@
 			}
 			return $mag;
 		}
-		echo("</h2>");
 
 		$companies = array();
 
@@ -133,41 +131,90 @@
 			}
 		}
 
-		function searchCountry($tag,$country){
-			$mag = false;
-			foreach($country as $i => $item){
-				if($item->getCountry() == $tag){
-					$mag = $i;
-				}
-			}
-			return $mag;
-		}
-		//final line country
+		// [country]{"company" =>[company]{"date" => [date]{"liquid + gel","equipement"},"somme_liquid_gel","somme_equipement"},"somme_liquid_gel","somme_equipement"}
 
 		$tab_country_company = array();
-		$companies_pays = $companies;
-		foreach($companies_pays as $company){
-			$tag = searchCountry($company->getNationality(),$tab_country_company);
-			if($tag !== false){
-				array_push($tab_country_company[$company->getNationality()],$company);
-			} else {
-				$tab_country_company[$company->getNationality()] = array($company);
-			}
-		}
-		echo('<h2>');
-		$final_line_country = array();
-		foreach($tab_country_company as $tag => $country){
-			foreach($country as $company){
-				foreach($company->getOrdersMonth() as $key => $price){
-					if(!isset($final_line_country[$tag][$key])){
-						$final_line_country[$tag][$key] = $price;
-					} else {
-						$final_line_country[$tag][$key] += $price;
-					}
+		$tab_country_company["somme_liquid_gel"] = 0;
+		$tab_country_company["somme_equipement"] = 0;
+		$tab_country_company["country"] = array();
+		$orders_for_country = $columns; //[date][orders]
+
+		foreach($columns as $date => $orders){
+			foreach($orders as $order){
+				$company = $order->getCompany();
+				$country = $company->getNationality();
+				$date = date('m',$order->getDate_entry()).'/'.date('y',$order->getDate_entry());
+				if(!isset($tab_country_company[$country]["company"][$company->getName()]["date"][$date])){
+					$tab_country_company["country"][$country]["company"][$company->getName()]["date"][$date]["somme_liquid_gel"] = 0;
+					$tab_country_company["country"][$country]["company"][$company->getName()]["date"][$date]["somme_equipement"] = 0;
 				}
+					
+				foreach($order->getLine_product() as $line_product){
+					$product = $line_product->getProduct();
+					if($product->getId_Group() <= 4){
+						$tab_country_company["country"][$country]["company"][$company->getName()]["date"][$date]["somme_liquid_gel"] += $line_product->getPrice_bis() * $line_product->getAmount();
+					} else {
+						$tab_country_company["country"][$country]["company"][$company->getName()]["date"][$date]["somme_equipement"] += $line_product->getPrice_bis() * $line_product->getAmount();
+					}
+				}//foreach : les lignes orders afin de checkez dans quelles catégories ils rentrent;
 			}
 		}
-		echo('</h2>');
+		//Somme pour les companies
+		foreach($tab_country_company["country"] as $country){
+			$country["somme_liquid_gel"] = 0;
+			$country["somme_equipement"] = 0;
+			foreach($country["company"] as $company){
+				$company["somme_liquid_gel"] = 0;
+				$company["somme_equipement"] = 0;
+				foreach($company["date"] as $date){
+					$company["somme_liquid_gel"] += $date["somme_liquid_gel"];
+					$company["somme_equipement"] += $date["somme_equipement"];
+				}
+				$country["somme_liquid_gel"] += $company["somme_liquid_gel"];
+				$country["somme_equipement"] += $company["somme_equipement"];
+			}
+			$tab_country_company["somme_liquid_gel"] += $country["somme_liquid_gel"];
+			$tab_country_company["somme_equipement"] += $country["somme_equipement"];
+		}	
+
+
+		// function searchCountry($tag,$country){
+		// 	$mag = false;
+		// 	foreach($country as $i => $item){
+		// 		foreach($item as $j => $subitem){
+		// 			if($i == $subitem->getNationality()){
+		// 				$mag = $i;
+		// 			}
+		// 		}
+		// 	}
+		// 	return $mag;
+		// }
+		// //final line country
+
+		// $tab_country_company = array();
+		// $companies_pays = $companies;
+		// foreach($companies_pays as $company){
+		// 	$tag = searchCountry($company->getNationality(),$tab_country_company);
+		// 	if($tag !== false){
+		// 		array_push($tab_country_company[$company->getNationality()],$company);
+		// 	} else {
+		// 		$tab_country_company[$company->getNationality()] = array($company);
+		// 	}
+		// }
+		// echo('<h2>');
+		// $final_line_country = array();
+		// foreach($tab_country_company as $tag => $country){
+		// 	foreach($country as $company){
+		// 		foreach($company->getOrdersMonth() as $key => $price){
+		// 			if(!isset($final_line_country[$tag][$key])){
+		// 				$final_line_country[$tag][$key] = $price;
+		// 			} else {
+		// 				$final_line_country[$tag][$key] += $price;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		//echo('</h2>');
 
 		// Get command who doesn't have been paid
 

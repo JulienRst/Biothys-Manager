@@ -3,6 +3,8 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/datepicker.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
@@ -16,28 +18,28 @@
 				<div class="form-group">
 					<label for="id_company"><?php echo($tf->getText(31));?></label>
 					<input name="id_company" type="hidden" value="">
-					<input class="form-control" autocomplete="off" name="company" type="text" value="">
+					<input class="form-control" autocomplete="off" name="company" type="text" value="" required>
 					<div id="proposition_company" class="list-group"></div>
 				</div>
 				<div class="form-group">
 					<label for="id_employee"><?php echo($tf->getText(33).' ('.$tf->getText(36).')');?></label>
 					<input name="id_employee" type="hidden" value="">
-					<input class="form-control" autocomplete="off" name="employee" type="text" value="">
+					<input class="form-control" autocomplete="off" name="employee" type="text" value="" required>
 					<div id="proposition_employee" class="list-group"></div>
 				</div>
 				<div class="form-group">
 					<label for="billing_period_bis"><?php echo($tf->getText(37));?></label>
-					<input class="form-control" autocomplete="off" name="billing_period_bis" type="text" value="">
+					<input class="form-control" autocomplete="off" name="billing_period_bis" type="text" value="" required>
 				</div>
 
 				<div class="ctn-inline">
 					<div class="form-group">
 						<label for="date_issuing"><?php echo($tf->getText(38));?></label>
-						<input name="date_issuing" class="datepicker  form-date" type="text" value="">
+						<input name="date_issuing" class="datepicker  form-date" type="text" value="" required>
 					</div>
 					<div class="form-group">
 						<label for="date_received"><?php echo($tf->getText(39));?></label>
-						<input name="date_received" class="datepicker  form-date" type="text" value="">
+						<input name="date_received" class="datepicker  form-date" type="text" value="" required>
 					</div>
 				</div>
 

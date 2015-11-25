@@ -1,19 +1,21 @@
 <?php
 
 	require_once('database.php');
+	require_once('../controller/getText.php');
 
 	class partner {
 
 		private $id;
 		private $country;
 		private $ref;
+		private $tf;
 
 		private $pdo;
 
 		public function __construct($id = 0){
 
 			$this->pdo = database::getInstance();
-
+			$this->tf = new textFinder();
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();

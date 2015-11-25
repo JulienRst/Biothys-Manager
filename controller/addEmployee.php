@@ -14,8 +14,6 @@
 		}
 	}
 
-	print_r($employee);
-
 	try {
 		$employee->addToDatabase();
 	} catch(Exception $e){

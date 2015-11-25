@@ -6,8 +6,8 @@
 	$idCu = $_GET['idCu'];
 
 	$customer = new customer($idCu);
-
 	$company = new company($idCo);
+	
 	$company->setId_contact($idCu);
 	$company->setToDatabase();
 

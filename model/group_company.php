@@ -1,19 +1,20 @@
 <?php
 
 	include_once('database.php');
+	require_once('../controller/getText.php');
 
 	class group_company {
 
 		private $id;
 		private $ref;
 		private $designation;
+		private $tf;
 
 		private $pdo;
 
 		public function __construct($id = 0){
-
+			$this->tf = new textFinder();
 			$this->pdo = database::getInstance();
-
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();
@@ -102,7 +103,7 @@
 
 		public function printToModify($next){
 			echo('
-				<input type="hidden" name="id" value="'.$this->id.'">
+				<input type="hidden" name="id" value="'.$this->getId().'">
 				<input type="hidden" name="class" value="group_company">
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">

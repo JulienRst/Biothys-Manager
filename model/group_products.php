@@ -11,6 +11,7 @@
 		private $type;
 		private $products;
 		private $parameters;
+		private $tf;
 
 		private $pdo;
 
@@ -18,12 +19,13 @@
 
 			$this->pdo = database::getInstance();
 
+			$this->tf = new textFinder();			
 			$this->products = array();
 
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();
-				$this->tf = new textFinder();
+				
 			}
 		}
 

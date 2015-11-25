@@ -127,7 +127,7 @@
 		}
 
 		public function eraseOfDatabase(){ 
-			$stmt = $this->pdo->prepare('DELETE FROM customer WHERE id = :id'); 
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM customer WHERE id = :id'); 
 			$stmt->bindParam(':id',$this->id); 
 			try { 
 				$stmt->execute(); 
@@ -153,7 +153,7 @@
 					<input name="mail" type="mail" class="form-control" value="'.$this->mail.'">
 				</div>
 				<div class="form-group">
-					<label for="phone_number">'.$this->tf->getText(46).'</label>
+					<label for="phone_number">'.$this->tf->getText(45).'</label>
 					<input name="phone_number" type="text" class="form-control" value="'.$this->phone_number.'">
 				</div>
 			');

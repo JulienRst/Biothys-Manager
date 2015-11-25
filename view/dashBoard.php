@@ -3,7 +3,9 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="../assets/css/datepicker.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
 	<body> 
@@ -37,13 +39,14 @@
 							<div class="sub-drop" alt="dropdown-secondo">
 								<div>
 									<?php 
+										$add =0;
 										foreach($companies as $company){
 									?>
 											<div class="dropdown-primo well">
 												<?php echo($company->getName());?> : <?php echo(count($company->getOrders())); ?> commandes dont 
 												<?php echo(number_format($company->getAlready_paid(),2,',',' ').'/'.number_format($company->getCa(),2,',',' ')); ?> € payé
-												<span rel="dropdown-tercio" class="drop glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-												<div class="sub-drop" alt="dropdown-tercio">
+												<span rel="dropdown-tercio<?php echo($add);?>" class="drop glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+												<div class="sub-drop" alt="dropdown-tercio<?php echo($add);?>">
 												<?php 
 
 													foreach($company->getOrders() as $order){
@@ -60,6 +63,7 @@
 											</div>
 
 									<?php	
+										$add++;
 										}
 									?>
 									

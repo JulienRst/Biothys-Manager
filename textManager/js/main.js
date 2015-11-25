@@ -24,7 +24,7 @@ $(document).ready(function(){
 		$('#popup .container .jumbotron form #FR').attr('value',data.FR);
 		$('#popup .container .jumbotron form #EN').attr('value',data.EN);
 		$('#popup .container .jumbotron form #GER').attr('value',data.GER);
-		$('#popup .container .jumbotron form #GER').attr('value',data.ES);
+		$('#popup .container .jumbotron form #ES').attr('value',data.ES);
 		$('#popup .container .jumbotron form #_id').attr('value',data.id);
 		$('#popup').fadeIn(200).css('display','table');
 	}

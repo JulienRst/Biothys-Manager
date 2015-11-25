@@ -72,11 +72,13 @@ body {
 }
 
 .ctn-addresses {
-	display: inline-block;
+	display: block;
 	margin: 10px;
 	border: solid 1.5px #121212;
 	border-radius: 3px;
-}	
+	box-sizing:border-box;
+	width: 95%;
+}
 
 #parameter_product_add {
 	display: none;
@@ -86,8 +88,13 @@ body {
 	width: 200px;
 }
 
+.form-control.xshort {
+	width: 35px;
+}
+
 .inline *{
 	display: inline-block;
+	vertical-align: middle;
 }
 
 .block * {
@@ -105,4 +112,16 @@ body {
 
 .subpanel.active {
 	display: block;
+}
+
+.block-button {
+	margin: 4px;
+}
+
+.block-button * {
+	margin: 1px;
+}
+
+#hidden-settings {
+	display: none;
 }

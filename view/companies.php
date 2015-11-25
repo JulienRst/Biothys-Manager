@@ -3,6 +3,8 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
@@ -12,6 +14,7 @@
 			<?php include('../view/header.php'); ?>
 			<a href="viewAddCompany.php"><button class="btn btn-success"><?php echo($tf->getText(30).' '.$tf->getText(31)); ?></button></a>
 		 	<br>
+		 	<br/>
 		 	<input id="searchCompany" class="form-control small" type="text">
 		 	<br>
 			<table class="table table-stripped">

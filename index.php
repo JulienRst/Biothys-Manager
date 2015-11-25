@@ -1,5 +1,5 @@
 <?php
 
-	header("location:controller/viewIndex.php");
+	header("location:controller/viewConnection.php");
 
 ?>

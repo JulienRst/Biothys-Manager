@@ -16,6 +16,10 @@
 		private $product;
 		private $ref;
 		private $ref_batch;
+		private $discount;
+
+		private $amount_already_delivered;
+		private $amount_to_be_delivered;
 
 		private $pdo;
 
@@ -79,10 +83,10 @@
 				echo('Problem at '.$e->getLine().' from model link_order_product :'.$e->getMessage());
 			}
 			$actual_link_order_product = $stmt_get->fetch(PDO::FETCH_ASSOC);
-
 			foreach($actual_link_order_product as $key => $value){
+				echo($key.' : '.$value.' ===> '.$key.' : '.$this->$key.'<br/>');
 				if($actual_link_order_product[$key] != $this->$key){
-					$stmt = $this->pdo->prepare("UPDATE link_order_product SET $key = :value WHERE id = :id");
+					$stmt = $this->pdo->PDOInstance->prepare("UPDATE link_order_product SET $key = :value WHERE id = :id");
 					$stmt->bindParam(":value",$this->$key);
 					$stmt->bindParam(":id",$this->id);
 					try {
@@ -92,6 +96,7 @@
 						echo('Problem at '.$e->getLine().' from model link_order_product :'.$e->getMessage());
 					}
 				}
+				echo('Done'.'<br/>');
 			}
 		}
 		public function eraseOfDatabase(){
@@ -121,7 +126,12 @@
 		public function getProduct(){return $this->product;}
 		public function getRef(){return $this->ref;}
 		public function getRef_batch(){return $this->ref_batch;}
+		public function getDiscount(){return $this->discount;}
 
+		public function getAmount_already_delivered(){return $this->amount_already_delivered;}
+		public function getAmount_to_be_delivered(){return $this->amount_to_be_delivered;}
+
+			
 		public function setId($new){$this->id = $new;}
 		public function setId_product($new){$this->id_product = $new;}
 		public function setId_parameter($new){$this->id_parameter = $new;}
@@ -130,6 +140,11 @@
 		public function setPrice_bis($new){$this->price_bis = $new;}
 		public function setProduct($new){$this->product = $new;}
 		public function setRef($new){$this->ref = $new;}
+		public function setDiscount($new){$this->discount = $new;}
 		public function setRef_batch($new){$this->ref_batch = $new;}
+
+
+		public function setAmount_already_delivered($new){$this->amount_already_delivered = $new;}
+		public function setAmount_to_be_delivered($new){$this->amount_to_be_delivered = $new;}
 	}
 ?>

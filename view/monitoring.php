@@ -3,6 +3,8 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/datepicker.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
@@ -54,9 +56,11 @@
 									echo('<td>'.$company->getName().'</td>');
 									$summ = 0;
 									foreach($columns as $key => $value){
-										if(isset($company->getOrdersMonth()[$key])){
-											echo('<td>'.number_format($company->getOrdersMonth()[$key],2,',',' ').' €</td>');
-											$summ += $company->getOrdersMonth()[$key];
+										$test1 = $company->getOrdersMonth();
+										if(isset($test1[$key])){
+											$test2 = $test1[$key];
+											echo('<td>'.number_format($test2,2,',',' ').' €</td>');
+											$summ += $test2;
 										} else {
 											echo('<td></td>');
 										}
@@ -93,7 +97,6 @@
 						<!-- group_product["group"]["country"]["name"]["date"]{["quantity"]["pricetotal"]} -->
 
 						<?php 
-
 							foreach($group_products as $name_gp => $countries){
 								echo('<h2>'.$name_gp.'</h2>');
 								foreach($countries as $name_c => $products){
@@ -148,55 +151,86 @@
 
 					</div>
 					<div rel="mapping" class="subpanel">
-						<?php 
-							foreach($tab_country_company as $tag => $value){
-								echo('<h2>'.$tag.'</h2>');
-								foreach($value as $company){
-						?>
-									<table class="table table-stripped">
-										<tr>
-											<th>Name of Company</th>
-											<?php
-												foreach ($columns as $key => $value) {
-													echo('<th>'.$key.'</th>');
-												}
-											?>
-											<th>Total</th>
-										</tr>
-								
-								<?php
-									echo('<tr>');
-									echo('<td>'.$company->getName().'</td>');
-									$summ = 0;
-									foreach($columns as $key => $value){
-										if(isset($company->getOrdersMonth()[$key])){
-											echo('<td>'.number_format($company->getOrdersMonth()[$key],2,',',' ').' €</td>');
-											$summ += $company->getOrdersMonth()[$key];
-										} else {
-											echo('<td></td>');
-										}
-									}
+						<h2>Total select :</h2>
+						<table class="table table-bordered">
+							<tr>
+								<th>Liquide + Gel sold</th>
+								<th>Equipement sold</th>
+							</tr>
+							<tr>
+								<td><?php echo(number_format($tab_country_company["somme_liquid_gel"],2,',',' ')); ?> €</td>
+								<td><?php echo(number_format($tab_country_company["somme_equipement"],2,',',' ')); ?> €</td>
+							</tr>
+						</table>
 
-									echo('<td>'.number_format($summ,2,',',' ').' €</td>');
-									echo('</tr>');
-									echo('<tr>');
-										echo('<td>Total</td>');
-										$summmum = 0;
-											foreach($final_line_country[$tag] as $date => $value){
-											echo('<td>'.number_format($value,2,',',' ').' €</td>');
-											$summmum += $value;
-										}
-										echo('<td>'.number_format($summmum,2,',',' ').' €</td>');
-									echo('</tr>');
-								?>
-									</table>
-						<?php 
-								}
-							}
-						?>
+						<?php
+
+						foreach($tab_country_company["country"] as $tag_country => $country){
+							$backline = array();
+						 	echo('<h2>'.$tag_country.'</h2>');
+						 	echo('<table class="table table-stripped table-bordered">');
+						 	echo('<tr>');
+						 		echo('<th rowspan="2" style="text-align:center;vertical-align:middle;">Name of Company</th>');
+						 		foreach($columns as $date => $valuewedontcare){
+						 			echo('<th colspan="2" style="text-align:center;">'.$date.'</th>');
+						 		}
+						 		echo('<th colspan="2" style="text-align:center;">Total</th>');
+						 	echo('</tr><tr>');
+						 		for($i=0;$i<count($columns)*2 + 2;$i++){
+						 			if($i%2 == 0){
+						 				echo('<th style="text-align:center;">Liquid + Gel</th>');
+						 			} else {
+						 				echo('<th style="text-align:center;">Equipement</th>');
+						 			}
+						 		}
+
+						 	echo('</tr>');
+						 	foreach($country["company"] as $name_company => $company){
+						 		echo('<tr>');
+						 		echo('<td style="text-align:center;">'.$name_company.'</td>');
+						 		$endline_slg = 0;
+						 		$endline_e = 0;
+						 		foreach($columns as $date => $valuewedontcare){
+						 			$date = str_replace('-','/',$date);
+						 			if(isset($company["date"][$date])){
+						 				echo('<td style="text-align:center;">'.number_format($company["date"][$date]["somme_liquid_gel"],2,',',' ').' €</td>');
+						 				echo('<td style="text-align:center;">'.number_format($company["date"][$date]["somme_equipement"],2,',',' ').' €</td>');
+						 			} else {
+						 				echo('<td></td><td></td>');
+						 			}
+						 			if(isset($backline[$date])){
+						 				$backline[$date]["liquid_gel"] += $company["date"][$date]["somme_liquid_gel"]; 
+						 				$backline[$date]["equipement"] += $company["date"][$date]["somme_equipement"]; 
+						 			} else {
+						 				$backline[$date]["liquid_gel"] = $company["date"][$date]["somme_liquid_gel"]; 
+						 				$backline[$date]["equipement"] = $company["date"][$date]["somme_equipement"]; 
+						 			}
+
+						 			$endline_slg += $company["date"][$date]["somme_liquid_gel"]; 
+						 			$endline_e += $company["date"][$date]["somme_equipement"]; 
+						 		}
+						 		echo('<td style="text-align:center;">'.number_format($endline_slg,2,',',' ').' €</td>');
+						 		echo('<td style="text-align:center;">'.number_format($endline_e,2,',',' ').' €</td>');
+						 		echo('</tr>');
+						 	}
+						 	echo('<tr><td style="text-align:center;">Total</td>');
+						 	$total_slg = 0;
+						 	$total_e = 0;
+						 	foreach($backline as $values){
+						 		echo('<td style="text-align:center;">'.number_format($values["liquid_gel"],2,',',' ').' €</td><td style="text-align:center;">'.number_format($values["equipement"],2,',',' ').' €</td>');
+						 		$total_slg += $values["liquid_gel"];
+						 		$total_e += $values["equipement"];
+						 	}
+						 	echo('<td style="text-align:center;">'.number_format($total_slg,2,',',' ').' €</td>');
+						 	echo('<td style="text-align:center;">'.number_format($total_e,2,',',' ').' €</td>');
+
+						 	echo('</tr>');
 
 
 
+						 	echo('</table>');
+						 }
+						 ?>
 					</div>
 					<div rel="encoursclient" class="subpanel">
 

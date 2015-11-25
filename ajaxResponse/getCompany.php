@@ -10,7 +10,7 @@
 	$extraction = new extraction();
 
 	$results = $extraction->get('company');
-
+	echo('<input id="lookCompany" class="form-control" type="text">');
 	foreach ($results as $company) {
 		echo('<div class="ctn-addresses">');
 		echo('<div class="ctn-address">');

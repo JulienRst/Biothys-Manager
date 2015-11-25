@@ -26,6 +26,7 @@
 		private $ust_id;
 		private $phone_number;
 		private $delivery_addresses;
+		private $countryWhoBill;
 
 		//DashBoard Only
 		public $orders;
@@ -126,7 +127,7 @@
 			$id = $ctnid["lid"] + 1;
 
 
-			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO company(id,id_group_company,id_contact,id_billing_address,id_receiving_address,ust_id,name,nationality,description,normal_billing_period,phone_number) VALUES(:id,:id_group_company,:id_contact,:id_billing_address,:id_receiving_address,:ust_id,:name,:nationality,:description,:normal_billing_period,:phone_number)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO company(id,id_group_company,id_contact,id_billing_address,id_receiving_address,ust_id,name,nationality,countryWhoBill,description,normal_billing_period,phone_number) VALUES(:id,:id_group_company,:id_contact,:id_billing_address,:id_receiving_address,:ust_id,:name,:nationality,:countryWhoBill,:description,:normal_billing_period,:phone_number)");
 			$stmt->bindParam(':id',$id);
 			$stmt->bindParam(':id_group_company',$this->id_group_company);
 			$stmt->bindParam(':id_contact',$this->id_contact);
@@ -134,6 +135,7 @@
 			$stmt->bindParam(':id_receiving_address',$this->id_receiving_address);
 			$stmt->bindParam(':name',$this->name);
 			$stmt->bindParam(':nationality',$this->nationality);
+			$stmt->bindParam(':countryWhoBill',$this->countryWhoBill);
 			$stmt->bindParam(':description',$this->description);
 			$stmt->bindParam(':normal_billing_period',$this->normal_billing_period);
 			$stmt->bindParam(':ust_id',$this->ust_id);
@@ -226,6 +228,10 @@
 					<input name="nationality" type="text" class="form-control" value="'.$this->nationality.'">
 				</div>
 				<div class="form-group">
+					<label for="countryWhoBill">Country who bill</label>
+					<input name="countryWhoBill" type="text" class="form-control" value="'.$this->countryWhoBill.'">
+				</div>
+				<div class="form-group">
 					<label for="description">'.$this->tf->getText(42).'</label>
 					<input name="description" type="text" class="form-control" value="'.$this->description.'">
 				</div>
@@ -275,6 +281,10 @@
 				<div class="form-group">
 					<label for="nationality">'.$this->tf->getText(50).'</label>
 					<input name="nationality" type="text" class="form-control" value="'.$this->nationality.'">
+				</div>
+				<div class="form-group">
+					<label for="countryWhoBill">Country who bill</label>
+					<input name="countryWhoBill" type="text" class="form-control" value="'.$this->countryWhoBill.'">
 				</div>
 				<div class="form-group">
 					<label for="description">'.$this->tf->getText(42).'</label>
@@ -345,9 +355,10 @@
 		public function getNormal_billing_period(){return $this->normal_billing_period;}
 		public function getPhone_number(){return $this->phone_number;}
 		public function getUst_id(){return $this->ust_id;}
+		public function getCountryWhoBill(){return $this->countryWhoBill;}
 
 		public function getGroup_company(){return $this->group_company;}
-		public function getAddress(){return $this->address;}
+		//public function getAddress(){return $this->address;}
 		public function getContac(){return $this->contact;}
 		public function getDelivery_addresses(){return $this->delivery_addresses;}
 		public function getReceiving_address(){return $this->receiving_address;}
@@ -368,10 +379,10 @@
 		public function setNormal_billing_period($new){$this->normal_billing_period = $new;}
 		public function setPhone_number($new){$this->phone_number = $new;}
 		public function setUst_id($new){$this->ust_id = $new;}
+		public function setCountryWhoBill($new){$this->countryWhoBill = $new;}
 
 		public function setGroup_company($new){$this->group_company = $new;}
 		public function setAddress($new){$this->address = $new;}
 		public function setContac($new){$this->contact = $new;}
 	}
-
 ?>

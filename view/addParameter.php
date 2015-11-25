@@ -3,14 +3,15 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
-	<body> 
+	<body>
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
-			
+
 			<h2><?php echo($tf->getText(27).' '.$tf->getText(9)); ?></h2>
 
 			<?php

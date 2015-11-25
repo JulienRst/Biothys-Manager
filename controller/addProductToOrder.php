@@ -2,7 +2,6 @@
 
 	require_once('../model/link_order_product.php');
 
-	print_r($_GET);
 	$id_order = $_GET["id_order"];
 	$quantity = $_GET["quantity"];
 	$price = $_GET["price"];

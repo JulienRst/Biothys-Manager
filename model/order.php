@@ -33,6 +33,13 @@
 		private $already_paid;
 		private $finish;
 
+		private $is_factorem;
+		private $force_tva;
+
+		private $line_bellow;
+		private $falligkeit;
+		private $param_delivery;
+
 		private $pdo;
 
 		public function __construct($id = 0){
@@ -54,7 +61,7 @@
 				if($this->company->getUst_id() != "" && $this->company->getNationality() != "GER"){
 					//
 				} else {
-					$tva = round(19*$order->getPrice()/100,2);
+					$tva = round(19*$this->getPrice()/100,2);
 				}
 
 				$this->final_price = $this->price + $tva;
@@ -80,6 +87,27 @@
 
 		}
 
+		public function readyToInvoice(){
+			//On récupère l'année en cours
+				$year = date('y');
+				//On récupère le ts de début et de fin de l'année en cours
+				$tsdeb = strtotime('01/01/'.strtoupper($year));
+				$tsend = strtotime('01/01/'.strtoupper((string)intval($year)+1));
+				//gmt + 1
+				$stmt_ref = $this->pdo->PDOInstance->prepare("SELECT MAX(ref) as max_ref FROM `order` WHERE date_entry >= :deb and date_entry < :end");
+				$stmt_ref->bindParam(':deb',$tsdeb);
+				$stmt_ref->bindParam(':end',$tsend);
+
+				try {
+					$stmt_ref->execute();
+				} catch(Exception $e){
+					echo('Problem at '.$e->getLine().' from model order :'.$e->getMessage());
+				}
+				$req_ref = $stmt_ref->fetch();
+				$this->ref = $req_ref["max_ref"] + 1;
+				$this->setToDatabase();
+		}
+
 		public function getFromDatabase(){
 			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * FROM `order` WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
@@ -103,33 +131,21 @@
 
 		public function addToDatabase(){
 			//Avant d'ajouter la commande dans la base
-				//On récupère l'année en cours
-				$year = date('y');
-				//On récupère le ts de début et de fin de l'année en cours
-				$tsdeb = strtotime('01/01/'.strtoupper($year));
-				$tsend = strtotime('01/01/'.strtoupper((string)intval($year)+1));
-				//gmt + 1
-				$stmt_ref = $this->pdo->PDOInstance->prepare("SELECT MAX(ref) as max_ref FROM `order` WHERE date_entry >= :deb and date_entry < :end");
-				$stmt_ref->bindParam(':deb',$tsdeb);
-				$stmt_ref->bindParam(':end',$tsend);
+				$this->ref = 0;
+			$this->param_delivery = '{"DeliveryBy" : "","GrossWeight" : "","NbOfPackages" : "","NbOfPallets" : "","Measures" : ""}';
 
-				try {
-					$stmt_ref->execute();
-				} catch(Exception $e){
-					echo('Problem at '.$e->getLine().' from model order :'.$e->getMessage());
-				}
-				$req_ref = $stmt_ref->fetch();
-				$this->ref = $req_ref["max_ref"] + 1;
-			
 			$no = "no";
 
-			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(ref,id_company,id_employee,billing_period_bis,ready,finish,date_issuing,date_received,date_entry) VALUES(:ref,:id_company,:id_employee,:billing_period_bis,:ready,:finish,:date_issuing,:date_received,:date_entry)");
+			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO `order`(ref,id_company,id_employee,billing_period_bis,param_delivery,force_tva,is_factorem,ready,finish,date_issuing,date_received,date_entry) VALUES(:ref,:id_company,:id_employee,:billing_period_bis,:param_delivery,:force_tva,:is_factorem,:ready,:finish,:date_issuing,:date_received,:date_entry)");
 			$stmt->bindParam(':ref',$this->ref);
 			$stmt->bindParam(':id_company',$this->id_company);
 			$stmt->bindParam(':id_employee',$this->id_employee);
 			$stmt->bindParam(':billing_period_bis',$this->billing_period_bis);
+			$stmt->bindParam(':param_delivery',$this->param_delivery);
 			$stmt->bindParam(':ready',$no);
 			$stmt->bindParam(':finish',$no);
+			$stmt->bindParam(':is_factorem',$no);
+			$stmt->bindParam(':force_tva',$no);
 			$stmt->bindParam(':date_issuing',$this->date_issuing);
 			$stmt->bindParam(':date_received',$this->date_received);
 			$stmt->bindParam(':date_entry',$this->date_entry);
@@ -168,8 +184,19 @@
 		}
 
 		public function printTR(){
-			echo('<tr>');
-				echo('<td>'.$this->id.'</td>');
+			$color = false;
+			foreach($this->line_product as $line){
+				if($line->getAmount() > $line->getAmount_already_delivered()){
+					$color = true;
+					break;
+				}
+			}
+			if($color){
+				echo('<tr class="order info">');
+			} else {
+				echo('<tr class="order">');
+			}
+				echo('<td>'.$this->generateId().'</td>');
 				echo('<td>'.$this->company->getName().'</td>');
 				echo('<td>'.$this->employee->getSurname().' '.$this->employee->getName().'</td>');
 				echo('<td>'.$this->delivery_address->printAddress().'</td>');
@@ -191,7 +218,7 @@
 						echo('<td>'.date('d-m-y',$date).'</td>');
 					}
 				}				
-				echo('<td><a href="viewOrder.php?id='.$this->id.'"><button><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>');
+				echo('<td><a href="viewOrder.php?id='.$this->id.'"><button><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button></a></td>');
 			echo('</tr>');
 		}
 
@@ -204,6 +231,34 @@
 			} catch(Exception $e){
 				echo('Problem at '.$e->getLine().' from model order :'.$e->getMessage());
 			}
+		}
+
+		public function generateId(){
+
+			//[X : typedocument][XX : Year][X : country][XXXX : id commande]
+			$year = date('y');
+			$country = 5;
+			$typedocument = "[X]";
+
+			$country_company = $this->getCompany()->getNationality();
+			$extraction = new extraction();
+			$allPartners = $extraction->get('partner');
+			$id_order = $this->getRef();
+			$id_to_print = "";
+			$count = strlen((string) $id_order);
+			for($i=0;$i< 4-($count);$i++){
+				$id_to_print .= "0";
+			} 
+			$id_to_print .= $id_order;
+			foreach ($allPartners as $partner) {
+				if($partner->getCountry() == $country_company){
+					$country = $partner->getRef();
+					break;
+				}
+			}
+			//id commande à replacer par référence commande quand ce sera fait
+			$id_document = $typedocument.$year.$country.$id_to_print;
+			return $id_document;
 		}
 
 		public function getId(){return $this->id;}
@@ -222,16 +277,20 @@
 		public function getLine_product(){return $this->line_product;}
 		public function getCustomer_order_id(){return $this->customer_order_id;}
 		public function getReady(){return $this->ready;}
-
 		public function getPrice(){return $this->price;}
 		public function getEmployee(){return $this->employee;}
-		public function getDelayForDelivery(){ // to do !!!!!!!!!!!!!!!!!
-			return 0;
-		}
+		public function getDelayForDelivery(){ return $this->billing_period_bis;}
+		public function getCompany(){return $this->company;}
 		public function getAlready_paid(){return $this->already_paid;}
 		public function getFinal_price(){return $this->final_price;}
 		public function getFinish(){return $this->finish;}
+		public function getIs_factorem(){return $this->is_factorem;}
+		public function getForce_tva(){return $this->force_tva;}
+		public function getLine_bellow(){return $this->line_bellow;}
+		public function getFalligkeit(){return $this->falligkeit;}
+		public function getParam_delivery(){return $this->param_delivery;}
 
+	
 		public function setId($new){$this->id = $new;}
 		public function setRef($new){$this->ref = $new;}
 		public function setId_company($new){$this->id_company = $new;}
@@ -250,5 +309,13 @@
 		public function setAlready_paid($new){$this->already_paid = $new;}
 		public function setFinal_price($new){$this->final_price = $new;}
 		public function setFinish($new){$this->finish = $new;}
+		public function setIs_factorem($new){$this->is_factorem = $new;}
+		public function setForce_tva($new){$this->force_tva = $new;}
+
+		public function setLine_bellow($new){$this->line_bellow = $new;}
+		public function setFalligkeit($new){$this->falligkeit = $new;}
+		public function setParam_delivery($new){$this->param_delivery = $new;}
+
+
 	}
 ?>

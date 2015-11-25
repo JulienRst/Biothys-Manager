@@ -125,7 +125,7 @@
 				<input type="hidden" name="next" value="'.$next.'">
 				<div class="form-group">
 					<label for="ref">'.$this->tf->getText(59).'</label>
-					<input name="ref" type="number" class="form-control" value="'.$this->ref.'">
+					<input name="ref" type="text" class="form-control" value="'.$this->ref.'">
 				</div>
 				<div class="form-group">
 					<label for="name">'.$this->tf->getText(25).'</label>

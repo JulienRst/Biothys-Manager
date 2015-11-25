@@ -1,7 +1,8 @@
 <?php
-	$data = $_GET["address"];
-	$data = json_decode($data,true);
 
+	$data = $_GET["address"];
+	$data = str_replace('\\','', $data);
+	$data = json_decode($data,true);
 
 	$idFor = $data['idFor'];
 	$class = $data['for'];
