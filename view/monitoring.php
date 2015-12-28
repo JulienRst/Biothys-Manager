@@ -3,13 +3,13 @@
 	<head>
 		<title>Biothys Manager - Index</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		
-		
+
+
 		<link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/datepicker.css">
 		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	</head>
-	<body> 
+	<body>
 		<?php include('../view/nav.php'); ?>
 		<div class="container">
 			<?php include('../view/header.php'); ?>
@@ -28,7 +28,7 @@
 			The current years turnover is : <?php echo($yearTurnover);?>€<br>
 			The current month turnover is : <?php echo($monthTurnover);?>€<br>
 
-			<?php 
+			<?php
 				if($display){
 			?>
 
@@ -37,6 +37,7 @@
 					<li role="products"><a href="#">Produits</a></li>
 					<li role="mapping"><a href="#">Cartographie</a></li>
 					<li role="encoursclient"><a href="#">En cours client</a></li>
+					<li role="viewfacture"><a href="#">Voir les factures</a></li>
 				</ul>
 				<div class="tabs">
 					<div rel="mainview" class="active subpanel">
@@ -96,12 +97,12 @@
 					<div rel="products" class="subpanel">
 						<!-- group_product["group"]["country"]["name"]["date"]{["quantity"]["pricetotal"]} -->
 
-						<?php 
+						<?php
 							foreach($group_products as $name_gp => $countries){
 								echo('<h2>'.$name_gp.'</h2>');
 								foreach($countries as $name_c => $products){
 									echo('<h3>'.$name_c.'</h3>');
-								
+
 						?>
 									<table class="table table-bordered">
 										<tr>
@@ -199,15 +200,15 @@
 						 				echo('<td></td><td></td>');
 						 			}
 						 			if(isset($backline[$date])){
-						 				$backline[$date]["liquid_gel"] += $company["date"][$date]["somme_liquid_gel"]; 
-						 				$backline[$date]["equipement"] += $company["date"][$date]["somme_equipement"]; 
+						 				$backline[$date]["liquid_gel"] += $company["date"][$date]["somme_liquid_gel"];
+						 				$backline[$date]["equipement"] += $company["date"][$date]["somme_equipement"];
 						 			} else {
-						 				$backline[$date]["liquid_gel"] = $company["date"][$date]["somme_liquid_gel"]; 
-						 				$backline[$date]["equipement"] = $company["date"][$date]["somme_equipement"]; 
+						 				$backline[$date]["liquid_gel"] = $company["date"][$date]["somme_liquid_gel"];
+						 				$backline[$date]["equipement"] = $company["date"][$date]["somme_equipement"];
 						 			}
 
-						 			$endline_slg += $company["date"][$date]["somme_liquid_gel"]; 
-						 			$endline_e += $company["date"][$date]["somme_equipement"]; 
+						 			$endline_slg += $company["date"][$date]["somme_liquid_gel"];
+						 			$endline_e += $company["date"][$date]["somme_equipement"];
 						 		}
 						 		echo('<td style="text-align:center;">'.number_format($endline_slg,2,',',' ').' €</td>');
 						 		echo('<td style="text-align:center;">'.number_format($endline_e,2,',',' ').' €</td>');
@@ -245,9 +246,12 @@
 								<th>Go to order</th>
 							</tr>
 							<?php
-
+								$totalEnCours = 0;
+								$alreadyPaid = 0;
 								foreach($ordersToGetPaid as $order){
 									//Calcul de la date de paiement
+									$totalEnCours += $order->getPrice();
+									$alreadyPaid += $order->getAlready_paid();
 									$dateBilling = $order->getDate_receipt();
 									$billing_period = $order->getBilling_period_bis();
 
@@ -286,15 +290,39 @@
 							?>
 
 						</table>
-
+						<p><strong>TOTAL : <?php echo($alreadyPaid.' € / '.$totalEnCours. ' € payé, il reste : '.($totalEnCours - $alreadyPaid).' € à payer');?></strong></p>
 					</div>
 				</div>
 
-				
 			<?php
 				}
 			?>
 
+			</div>
+			<div rel="viewfacture" class="subpanel">
+				<table class="table table-stripped">
+					<tr>
+						<th>Client</th>
+						<th>Date d'édition de la facture</th>
+						<th>Date d'envoie de la facture</th>
+						<th>Montant de la facture</th>
+						<th>Lien</th>
+					</tr>
+				<?php // Client // Date de Facturation // Montant de la facture // Lien vers la facture
+
+				foreach($ordersFactured as $order){
+					echo('<tr>');
+					echo('<td>'.$order->getCompany()->getName().'</td>');
+					echo('<td>'.date("d/m/y",$order->getDate_billing()).'</td>');
+					if($order->getDate_receipt() == 0){
+						echo('<td>Pas encore envoyé</td>');
+					} else {
+						echo('<td>'.$order->getDate_receipt().'</td>');
+					}
+					echo('<td>'.$order->getFinal_price().'</td>');
+					echo('<td><a href="viewOrder.php?id='.$order->getId().'"><button class="btn btn-primary"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button></a></td>');
+				}
+				?>
 			</div>
 		</div>
 

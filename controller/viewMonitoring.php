@@ -78,13 +78,13 @@
 				$deb_a = '01-'.$key;
 				$end_a = date('t',strtotime('01-'.$key)).'-'.$key;
 			}
-			
+
 			$orders = $extraction->getOrdersWithDate($deb_a,$end_a);
 
 			$columns[$key] = $orders;
 		}
 
-		//Préparation du tableu final 
+		//Préparation du tableu final
 
 			//Get line final score
 		$final_line = array();
@@ -93,7 +93,7 @@
 				$final_line[$date] = $amount;
 			}
 		}
-		
+
 
 		foreach($columns as $date => $orders){
 			foreach($orders as $order){
@@ -104,7 +104,7 @@
 				}
 			}
 		}
-		
+
 
 		function search($id,$company){
 			$mag = false;
@@ -148,7 +148,7 @@
 					$tab_country_company["country"][$country]["company"][$company->getName()]["date"][$date]["somme_liquid_gel"] = 0;
 					$tab_country_company["country"][$country]["company"][$company->getName()]["date"][$date]["somme_equipement"] = 0;
 				}
-					
+
 				foreach($order->getLine_product() as $line_product){
 					$product = $line_product->getProduct();
 					if($product->getId_Group() <= 4){
@@ -175,7 +175,7 @@
 			}
 			$tab_country_company["somme_liquid_gel"] += $country["somme_liquid_gel"];
 			$tab_country_company["somme_equipement"] += $country["somme_equipement"];
-		}	
+		}
 
 
 		// function searchCountry($tag,$country){
@@ -218,15 +218,17 @@
 
 		// Get command who doesn't have been paid
 
-		$ordersToGetPaid = $extraction->getOrdersToGetPaid();	
+		$ordersToGetPaid = $extraction->getOrdersToGetPaid();
 
-		// Get Product by date etc... 
+		// Get Product by date etc...
 
-		$group_products = $extraction->getProductsFromOrders($deb_a,$end_a); 
+		$group_products = $extraction->getProductsFromOrders($deb_a,$end_a);
 
 		//group_product["group"]["country"]["date"]{["name"]["quantity"]["pricetotal"]}
+
+		$ordersFactured = $extraction->getOrdersFactured($deb_a,$end_a);
 	}
-	
+
 	include('../view/monitoring.php');
 
 ?>

@@ -105,6 +105,9 @@
 				}
 				$req_ref = $stmt_ref->fetch();
 				$this->ref = $req_ref["max_ref"] + 1;
+				$time = new DateTime();
+				$time = $time->getTimestamp();
+				$this->date_billing = $time;
 				$this->setToDatabase();
 		}
 
@@ -217,7 +220,7 @@
 					} else {
 						echo('<td>'.date('d-m-y',$date).'</td>');
 					}
-				}				
+				}
 				echo('<td><a href="viewOrder.php?id='.$this->id.'"><button><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button></a></td>');
 			echo('</tr>');
 		}
@@ -248,7 +251,7 @@
 			$count = strlen((string) $id_order);
 			for($i=0;$i< 4-($count);$i++){
 				$id_to_print .= "0";
-			} 
+			}
 			$id_to_print .= $id_order;
 			foreach ($allPartners as $partner) {
 				if($partner->getCountry() == $country_company){
@@ -290,7 +293,7 @@
 		public function getFalligkeit(){return $this->falligkeit;}
 		public function getParam_delivery(){return $this->param_delivery;}
 
-	
+
 		public function setId($new){$this->id = $new;}
 		public function setRef($new){$this->ref = $new;}
 		public function setId_company($new){$this->id_company = $new;}

@@ -34,7 +34,7 @@
 		public $ca;
 		public $ordersMonth;
 
-		
+
 
 		private $pdo;
 
@@ -73,7 +73,7 @@
 		}
 
 		public function getFromDatabase(){
-			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT * 
+			$stmt_get = $this->pdo->PDOInstance->prepare("SELECT *
 											FROM company
 											WHERE id = :id");
 			$stmt_get->bindParam(':id',$this->id);
@@ -90,7 +90,7 @@
 					$this->$key = $value;
 				}
 				$this->billing_address = new address($this->id_billing_address);
-				$this->receiving_address = new address($this->id_receiving_address);				
+				$this->receiving_address = new address($this->id_receiving_address);
 				$this->group_company = new group_company($this->id_group_company);
 				$this->contact = new customer($this->id_contact);
 
@@ -298,7 +298,8 @@
 					<label for="id_contact">'.$this->tf->getText(43). ' '.$this->tf->getText(69).'</label>
 					<input type="text" id="contact" class="form-control" value="'.$this->contact->getName().' | '.$this->contact->getMail().' | '.$this->contact->getPhone_number().'">
 					<input name="id_contact" type="hidden" class="form-control" value="'.$this->id_contact.'">
-					<button id="getContact" alt="company" step="billing_address" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+					<button id="getContact" alt="company" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></a>
+					<button id="addContact" alt="company" rel="'.$this->id.'" class="display btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></a>
 				</div>
 				<div class="form-group">
 					<label for="id_billing_address">'.$this->tf->getText(87). ' '.$this->tf->getText(69).'</label>

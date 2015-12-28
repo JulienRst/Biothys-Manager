@@ -1,6 +1,6 @@
 <?php
 
-	include_once('database.php');
+	require_once('database.php');
 	require_once('company.php');
 
 	class customer {
@@ -21,7 +21,8 @@
 
 			$this->pdo = database::getInstance();
 			$this->tf = new textFinder();
-
+			$this->id_company = -1;
+			$this->id_address = -1;
 			if($id != 0){
 				$this->id = $id;
 				$this->getFromDatabase();
@@ -60,10 +61,8 @@
 		}
 
 		public function addToDatabase(){
-			$this->id_company = -1;
-			$this->id_address = -1;
 			$stmt = $this->pdo->PDOInstance->prepare("INSERT INTO customer(id_company,name,mail,nationality,phone_number,id_address) VALUES (:id_company,:name,:mail,:nationality,:phone_number,:id_address)");
-				
+
 			$stmt->bindParam(':id_company',$this->id_company);
 			$stmt->bindParam(':name',$this->name);
 			$stmt->bindParam(':mail',$this->mail);
@@ -75,6 +74,8 @@
 			} catch(Exception $e){
 				echo('Problem at '.$e->getLine().' from model customer :'.$e->getMessage());
 			}
+
+			return $this->pdo->PDOInstance->lastInsertId();
 		}
 
 		public function setToDatabase(){
@@ -126,14 +127,14 @@
 			echo('<a href="../controller/viewCustomer.php?id='.$this->id.'">'.$this->name.'</a>');
 		}
 
-		public function eraseOfDatabase(){ 
-			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM customer WHERE id = :id'); 
-			$stmt->bindParam(':id',$this->id); 
-			try { 
-				$stmt->execute(); 
-			} catch(Exception $e){ 
-				echo('Problem at '.$e->getLine().' from model customer :'.$e->getMessage()); 
-			} 
+		public function eraseOfDatabase(){
+			$stmt = $this->pdo->PDOInstance->prepare('DELETE FROM customer WHERE id = :id');
+			$stmt->bindParam(':id',$this->id);
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo('Problem at '.$e->getLine().' from model customer :'.$e->getMessage());
+			}
 		}
 
 		public function printToAdd($next){

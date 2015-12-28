@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	$('.datepicker').datepicker({
 		defaultDate : null,
-		 weekStart: 1 
+		 weekStart: 1
 	});
 	var isSettingsHidden = true;
 	$('#show-settings').click(function(){
@@ -127,7 +127,7 @@ $(document).ready(function(){
 			$(this).addClass('glyphicon-menu-up');
 			owned.css('display','block');
 		}
-		
+
 	});
 
 	$('#searchCompany').on('input',function(){
@@ -139,7 +139,7 @@ $(document).ready(function(){
 					$('tr:eq('+i+')').css('display','none');
 				}
 			}
-			
+
 		}
 	});
 
@@ -260,7 +260,7 @@ $(document).ready(function(){
 										}
 									});
 								});
-								$('.product-item').click(function(e){	
+								$('.product-item').click(function(e){
 									$('input[name="id_product"]').val($(this).attr("alt"));
 									$('input[name="product"]').val($(this).text());
 									$('input[name="price"]').val($(this).attr('rel'));
@@ -438,7 +438,6 @@ $(document).ready(function(){
 						var idCo = $(this).attr("rel");
 						console.log("company : "+idCo+" | customer : "+idCu);
 						url = '../controller/setCompanyCustomer.php?idCo='+idCo+'&idCu='+idCu;
-						console.log(url);
 						$.ajax({
 							url : url,
 							success : function(result){
@@ -449,6 +448,11 @@ $(document).ready(function(){
 							}
 						});
 					});
+
+				} else if(trigger == "addContact"){
+
+					console.log('Hey i\'m here ! ')
+
 				} else if(trigger == "getCompany"){
 					$('#lookCompany').on('input',function(){
 						$('.ctn-addresses').css('display','block');
@@ -485,7 +489,7 @@ $(document).ready(function(){
 
 	// Les deux algo suivants concernent l'ajout d'une commande
 
-	
+
 	$('.order input[name="company"]').on('input',function(){
 		if($(this).val() != ""){
 			url = '../ajaxResponse/helpOrder.php?class=company&needle='+$(this).val();
@@ -494,7 +498,7 @@ $(document).ready(function(){
 					success : function(result){
 					$('#proposition_company').html('');
 					$.each(result,function(i,item){
-						$('#proposition_company').append('<button type="button" class="list-group-item company-item" rel="'+result[i].billing_period_bis+'" alt="'+result[i].id+'">'+result[i].text+'</button>'); 
+						$('#proposition_company').append('<button type="button" class="list-group-item company-item" rel="'+result[i].billing_period_bis+'" alt="'+result[i].id+'">'+result[i].text+'</button>');
 					});
 					$('.company-item').click(function(e){
 						$('input[name="id_company"]').val($(this).attr("alt"));
@@ -517,9 +521,9 @@ $(document).ready(function(){
 				success : function(result){
 					$('#proposition_employee').html('');
 					$.each(result,function(i,item){
-						$('#proposition_employee').append('<button type="button" class="list-group-item employee-item" alt="'+result[i].id+'">'+result[i].text+'</button>'); 
+						$('#proposition_employee').append('<button type="button" class="list-group-item employee-item" alt="'+result[i].id+'">'+result[i].text+'</button>');
 					});
-					$('.employee-item').click(function(e){	
+					$('.employee-item').click(function(e){
 						$('input[name="id_employee"]').val($(this).attr("alt"));
 						$('input[name="employee"]').val($(this).text());
 						$('#proposition_employee').html('');
@@ -550,13 +554,9 @@ var Address = function(){
 					res += ",";
 				}
 			}
-			
+
 		}
 		res += "}";
 		return res;
 	}
 }
-
-
-
-

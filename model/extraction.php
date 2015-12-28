@@ -38,6 +38,32 @@
 
 		}
 
+		public function getOrdersFactured($deb_a,$end_a){
+			$deb = DateTime::createFromFormat('d-m-y',$deb_a)->getTimestamp();
+			$end = DateTime::createFromFormat('d-m-y',$end_a)->getTimestamp();
+
+			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE ref != 0 and date_billing > :deb and date_billing < :end");
+			$stmt->bindParam(':deb',$deb);
+			$stmt->bindParam(':end',$end);
+
+			try {
+				$stmt->execute();
+			} catch(Exception $e){
+				echo("Problem at ".$e->getLine()." from model Extraction :".$e->getMessage());
+			}
+
+			$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			$results = array();
+			foreach($orders as $line){
+				$order = new order($line["id"]);
+				if($order->getAlready_paid() < $order->getPrice()){
+
+					array_push($results,$order);
+				}
+			}
+			return $results;
+		}
+
 		public function getProductsFromOrders($deb_a,$end_a){
 
 			$deb = DateTime::createFromFormat('d-m-y',$deb_a)->getTimestamp();
@@ -62,11 +88,11 @@
 			foreach($result as $line){
 				$date = date('m',$line["dr"]).'/'.date('y',$line["dr"]);
 				if(!isset($resulting[$line["gpname"]][$line["cnationality"]][$date][$line["pname"]])){
-					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["quantity"] = $line["amount"]; 
-					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["price"] = $line["price_bis"]; 
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["quantity"] = $line["amount"];
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["price"] = $line["price_bis"];
 				} else {
-					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["quantity"] += $line["amount"]; 
-					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["price"] += $line["price_bis"]; 
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["quantity"] += $line["amount"];
+					$resulting[$line["gpname"]][$line["cnationality"]][$line["pname"]][$date]["price"] += $line["price_bis"];
 				}
 			}
 
@@ -95,7 +121,7 @@
 			} else {
 				$result_group = $this->getGroup();
 			}
-			
+
 
 			foreach ($result as $product) {
 				$product_ = new product();
@@ -179,14 +205,14 @@
 
 		public function getOrdersWithDate($deb,$end){
 			$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM `order` WHERE date_entry > :deb AND date_entry < :end ORDER BY date_entry");
-			
+
 			// $date_shipment = DateTime::createFromFormat('!d-m-y', $_GET['date_shipment'])->getTimestamp();
 			// $date_receipt = DateTime::createFromFormat('!d-m-y', $_GET['date_receipt'])->getTimestamp();
 
 
 			$deb = DateTime::createFromFormat('d-m-y',$deb)->getTimestamp();
 			$end = DateTime::createFromFormat('d-m-y',$end)->getTimestamp();
-			
+
 			$stmt->bindParam(':deb',$deb);
 			$stmt->bindParam(':end',$end);
 
@@ -368,7 +394,7 @@
 					array_push($result,$address_);
 				}
 
-				return $result;				
+				return $result;
 			}
 		}
 
@@ -512,7 +538,7 @@
 			} else {
 				$stmt = $this->pdo->PDOInstance->prepare("SELECT id FROM $class WHERE UPPER(name) LIKE UPPER('%".$needle."%' )LIMIT 5");
 			}
-			
+
 			try {
 				$stmt->execute();
 			} catch(Exception $e){
@@ -551,7 +577,7 @@
 			}
 			$stmt = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-			
+
 
 			$result = array();
 
